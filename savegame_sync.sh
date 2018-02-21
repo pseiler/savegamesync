@@ -6,31 +6,73 @@ usage(){
     echo "$0 provides savegame sync features for your owncloud/nextcloud instance"
     echo "Usage:"
     echo "$0 -u \"\$Game1, \$Game2\" uploads the files to your Cloud"
-    echo "$0 -d \"\$Game1, \$Game2\" downloads the files from your Cloud to the correct location" 
-    echo "$0 -l                  lists all available games" 
+    echo "$0 -d \"\$Game1, \$Game2\" downloads the files from your Cloud"
+    echo "                                     to the correct location" 
+    echo ""
+    echo "$0 -l                  lists all available games"
+    echo "$0 -h                  Shows this help message"
 }
 
 die(){
     echo "Error encountered"
+    echo "Reason: $1"
     exit 1
 }
 
-AVAIL_GAMES=(Celeste Hollow_Knight)
+AVAIL_GAMES=(Celeste Hollow_Knight Hacknet Deponia1 Deponia2 Deponia3 Skullgirls SuperHexagon)
 
-# Celeste packing function
-celeste_pack(){
-    tar -C ${HOME}/.local/share/ -czf ${1}/Celeste.tar.gz Celeste
+#### Game specific commandos
+# local_share (Skullgirls, Hacknet, Celeste, SuperHexagon)
+localshare_pack(){
+    tar -C ${HOME}/.local/share/ -czf ${1}/${2}.tar.gz ${2} &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
 }
-
-# Celeste unpacking function
-
+localshare_unpack(){
+    if [ ! -d ${HOME}/.local/share/ ]
+    then
+        mkdir -p ${HOME}/.local/share/
+    fi
+    tar -C ${HOME}/.local/share/  -xzf ${1}/${2}.tar.gz
+}
+# Deponia series
+deponia_pack(){
+    tar -C "${HOME}/.local/share/Daedalic Entertainment" -czf ${1}/${2}.tar.gz "${3}" &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
+}
+deponia_unpack(){
+    if [ ! -d "${HOME}/.local/share/Daedalic Entertainment" ]
+    then
+        mkdir -p "${HOME}/.local/share/Daedalic Entertainment"
+    fi
+    tar -C "${HOME}/.local/share/Daedalic Entertainment"  -xzf ${1}/${2}.tar.gz
+}
+# Hollow Knight
+hollow_knight_pack(){
+    tar -C "${HOME}/.config/unity3d/Team Cherry/" -czf ${1}/${2}.tar.gz Hollow\ Knight &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
+}
+hollow_knight_unpack(){
+    if [ ! -d "${HOME}/.config/unity3d/Team Cherry" ]
+    then
+        mkdir -p "${HOME}/.config/unity3d/Team Cherry"
+    fi
+    tar -C "${HOME}/.config/unity3d/Team Cherry/"  -xzf ${1}/${2}.tar.gz
+}
+# config (StardewValley)
+config_pack(){
+    tar -C "${HOME}/.config/" -czf ${1}/${2}.tar.gz ${2} &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
+}
+config_knight_unpack(){
+    if [ ! -d "${HOME}/.config" ]
+    then
+        mkdir -p "${HOME}/.config"
+    fi
+    tar -C "${HOME}/.config/unity3d/"  -xzf ${1}/${2}.tar.gz
+}
 
 # Set upload and download to false
 UPLOAD="no"
 DOWNLOAD="no"
 
 # declare parameters for getopts
-while getopts ":u:d:h" option; do
+while getopts ":u:d:hl" option; do
     case "${option}" in
         u)
             u=${OPTARG}
@@ -41,7 +83,13 @@ while getopts ":u:d:h" option; do
             DOWNLOAD="yes"
             ;;
         l)
-            l=${OPTARG}
+            echo "Available Games:"
+            echo ""
+            for l in ${AVAIL_GAMES[@]}
+            do
+                echo ${l}
+            done
+            exit 0
             ;;
         h)
             usage
@@ -108,9 +156,53 @@ then
 # do the actual upload
 elif [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "no" ]
 then
-    curl -u ${MY_USER}:${MY_PASSWORD} -X MKCOL $WEBDAV/$MY_SYNC_DIR &> /dev/null || die
+    curl -u ${MY_USER}:${MY_PASSWORD} -X MKCOL $WEBDAV/$MY_SYNC_DIR &> /dev/null || die "Could not create or check directory. Maybe Internet connection errors"
     IFS=', ' read -r -a GAMES_LIST <<< "$u"
-    echo "Upload Game(s) \"${GAMES_LIST[@]}\""
+    # check if all games are available
+    # https://stackoverflow.com/questions/2312762/compare-difference-of-two-arrays-in-bash#28161520
+    for i in ${GAMES_LIST[@]};
+    do
+        skip=
+        for j in ${AVAIL_GAMES[@]};
+        do
+            [[ $i == $j ]] && { skip=1; break; }
+        done
+        if ! [[ -n $skip ]]
+        then
+            die "Game \"${i}\" not found in supported Game list. Use \"$0 -l\"."
+        fi
+    done
+    for k in ${GAMES_LIST[@]};
+    do
+        PACK_DIR=$(mktemp -d /tmp/${k}.XXXXX)
+        case $k in
+            Celeste|Hacknet|Skullgirls|SuperHexagon)
+                localshare_pack ${PACK_DIR} ${k}
+                ;;
+            Hollow_Knight)
+                hollow_knight_pack ${PACK_DIR} ${k}
+                ;;
+            StardewValley)
+                config_pack ${PACK_DIR} ${k}
+                ;;
+            Deponia1)
+                deponia_pack ${PACK_DIR} ${k} 'Deponia'
+                ;;
+            Deponia2)
+                deponia_pack ${PACK_DIR} ${k} 'Deponia 2'
+                ;;
+            Deponia3)
+                deponia_pack ${PACK_DIR} ${k} 'Deponia 3'
+                ;;
+        esac
+        curl -u ${MY_USER}:${MY_PASSWORD} -X MKCOL $WEBDAV/$MY_SYNC_DIR/${k} &> /dev/null || die
+        echo "Uploading \"$k\" savegame"
+        curl -u ${MY_USER}:${MY_PASSWORD} -T ${PACK_DIR}/${k}.tar.gz $WEBDAV/$MY_SYNC_DIR/${k}/${k}.tar.gz || die "Upload of Game \"${k}\" failed"
+        rm -r $PACK_DIR
+    done
+elif [ $UPLOAD = "no" ] && [ $DOWNLOAD = "yes" ]
+then
+    IFS=', ' read -r -a GAMES_LIST <<< "$d"
     # check if all games are available
     # https://stackoverflow.com/questions/2312762/compare-difference-of-two-arrays-in-bash#28161520
     for i in ${GAMES_LIST[@]};
@@ -129,14 +221,29 @@ then
     for k in ${GAMES_LIST[@]};
     do
         PACK_DIR=$(mktemp -d /tmp/${k}.XXXXX)
+        echo "Downloading savestate for \"${k}\""
+        curl --fail -u ${MY_USER}:${MY_PASSWORD} $WEBDAV/$MY_SYNC_DIR/${k}/${k}.tar.gz 1> $PACK_DIR/${k}.tar.gz 2> /dev/null || die "No Savestate of \"${k}\" found."
+        echo "Unpacking savestate for \"${k}\""
         case $k in
-            Celeste)
-                celeste_pack $PACK_DIR
+            Celeste|Hacknet|Skullgirls|SuperHexagon)
+                localshare_unpack ${PACK_DIR} ${k}
+                ;;
+            Hollow_Knight)
+                hollow_knight_unpack ${PACK_DIR} ${k}
+                ;;
+            StardewValley)
+                config_unpack ${PACK_DIR} ${k}
+                ;;
+            Deponia1)
+                deponia_unpack ${PACK_DIR} ${k}
+                ;;
+            Deponia2)
+                deponia_unpack ${PACK_DIR} ${k}
+                ;;
+            Deponia3)
+                deponia_unpack ${PACK_DIR} ${k}
                 ;;
         esac
-        curl -u ${MY_USER}:${MY_PASSWORD} -X MKCOL $WEBDAV/$MY_SYNC_DIR/${k} &> /dev/null || die
-        echo "Uploading \"$k\" savegame"
-        curl -u ${MY_USER}:${MY_PASSWORD} -T ${PACK_DIR}/${k}.tar.gz $WEBDAV/$MY_SYNC_DIR/${k}/${k}.tar.gz || die
         rm -r $PACK_DIR
     done
 fi
