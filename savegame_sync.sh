@@ -19,6 +19,12 @@ then
     die "\"gzip\" is not installed"
 fi
 
+## check if $HOME Variable set
+if [ -z $HOME ]
+then
+    die "\$HOME variable not set. script could have unforeseen behaviour"
+fi
+
 
 #usage/help function
 usage(){
@@ -177,6 +183,7 @@ then
 # do the actual upload
 elif [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "no" ]
 then
+    echo "Creating remote Cloud directory \"$CLOUD_SYNC_DIR\" if not present..."
     curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -X MKCOL $WEBDAV/$CLOUD_SYNC_DIR &> /dev/null || die "Could not create or check directory. Maybe Internet connection errors"
     IFS=', ' read -r -a GAMES_LIST <<< "$u"
     # check if all games are available
@@ -216,6 +223,7 @@ then
                 deponia_pack ${PACK_DIR} ${k} 'Deponia 3'
                 ;;
         esac
+        echo "Creating remote savegame directory \"$CLOUD_SYNC_DIR/${k}\"..."
         curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -X MKCOL $WEBDAV/$CLOUD_SYNC_DIR/${k} &> /dev/null || die
         echo "Uploading \"$k\" savegame"
         curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -T ${PACK_DIR}/${k}.tar.gz $WEBDAV/$CLOUD_SYNC_DIR/${k}/${k}.tar.gz || die "Upload of Game \"${k}\" failed"
