@@ -2,17 +2,26 @@
 a little script which provides a save game sync for every linux game added implemented
 
 ## currently support
-* Hollow Knight
 * Celeste
-* Hacknet
 * Deponia1
 * Deponia2
 * Deponia3
+* Hacknet
+* HollowKnight
+* HunieCamStudio
+* HuniePop
 * Skullgirls
 * SuperHexagon
+* SuperMeatBoy
 
 ## Configuration
 You need a configuration file in your home directory
+Generate one with the setup wizard:
+```bash
+savegame_sync.sh -s
+```
+
+Or alternatively create your own
 ```bash
 user$ mkdir .savegame_sync
 user$ vim .savegame_sync/config.cfg
@@ -47,6 +56,11 @@ to the correct location
 savegame_sync.sh -l
 ```
 Lists all available games
+
+```bash
+savegame_sync.sh -s
+```
+Wizard for the configuration file
 
 ```bash
 savegame_sync.sh -h
