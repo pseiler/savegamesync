@@ -1,5 +1,25 @@
 #!/bin/bash
 
+## Error function
+die(){
+    echo "Error encountered"
+    echo "Reason: $1"
+    exit 1
+}
+
+## check if every binary needed in this script is installed
+if [ ! -x /usr/bin/curl ] && [ ! -x /bin/curl ]
+then
+    die "\"curl\" is not installed"
+elif [ ! -x /usr/bin/tar ] && [ ! -x /bin/tar ]
+then
+    die "\"tar\" is not installed"
+elif [ ! -x /usr/bin/gzip ] && [ ! -x /bin/gzip ]
+then
+    die "\"gzip\" is not installed"
+fi
+
+
 #usage/help function
 usage(){
     echo ""
@@ -11,12 +31,6 @@ usage(){
     echo ""
     echo "$0 -l                  lists all available games"
     echo "$0 -h                  Shows this help message"
-}
-
-die(){
-    echo "Error encountered"
-    echo "Reason: $1"
-    exit 1
 }
 
 AVAIL_GAMES=(Celeste Hollow_Knight Hacknet Deponia1 Deponia2 Deponia3 Skullgirls SuperHexagon)
