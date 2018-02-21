@@ -17,15 +17,18 @@ a little script which provides a save game sync for every linux game added imple
 savegame_sync.sh -u "$Game1, $Game2"
 ```
 uploads the files to your Cloud
+
 ```bash
 savegame_sync.sh -d "$Game1, $Game2"
 ```
 Downloads the files from your Cloud
 to the correct location
+
 ```bash
 savegame_sync.sh -l
 ```
 Lists all available games
+
 ```bash
 savegame_sync.sh -h
 ```
