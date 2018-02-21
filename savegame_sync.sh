@@ -81,6 +81,45 @@ config_knight_unpack(){
     tar -C "${HOME}/.config/unity3d/"  -xzf ${1}/${2}.tar.gz
 }
 
+### Configuration directory reading. Check it if its present
+CONFIG_DIR=${HOME}/.savegame_sync;
+if [ -f ${CONFIG_DIR}/config.cfg ];
+then
+    chmod 700 ${CONFIG_DIR}
+    chmod 600 ${CONFIG_DIR}/config.cfg
+    source ${CONFIG_DIR}/config.cfg;
+fi;
+
+## Building URL from Domain name and url path
+URL="https://${CLOUD_DOMAIN}/${CLOUD_URL_PATH}";
+
+#Check if domain parameter is present
+if [ -z $CLOUD_DOMAIN ];
+then
+    echo "No Nextcloud Domain entered";
+    exit 1;
+fi
+#check if user and password provided
+if [ -z $CLOUD_USER ]
+then
+    die "No User provided"
+fi
+while [ -z $CLOUD_PASSWORD ];
+do
+    echo ""
+    echo "No Password provided"
+    echo "Enter your password for user \"${CLOUD_USER}\":"
+    read -rs CLOUD_PASSWORD
+done
+
+if [ -z $CLOUD_SYNC_DIR ]
+then
+    CLOUD_SYNC_DIR=savegames
+    echo "Using standard sync directory \"${CLOUD_SYNC_DIR}\"."
+fi
+
+WEBDAV="$URL/remote.php/dav/files/${CLOUD_USER}"
+
 # Set upload and download to false
 UPLOAD="no"
 DOWNLOAD="no"
@@ -124,38 +163,6 @@ then
     usage;
     exit 1;
 fi
-### Configuration directory reading. Check it if its present
-CONFIG_DIR=/etc/savegame_sync;
-if [ -f ${CONFIG_DIR}/config.cfg ];
-then
-    source ${CONFIG_DIR}/config.cfg;
-fi;
-
-## Building URL from Domain name and url path
-URL="https://${MY_DOMAIN}/${MY_URL_PATH}";
-
-#Check if domain parameter is present
-if [ -z $MY_DOMAIN ];
-then
-    echo "No Nextcloud Domain entered";
-    exit 1;
-fi
-#check if user and password provided
-if [ -z $MY_USER ] || [ -z $MY_PASSWORD ];
-then
-    echo "No User and/or Password provided";
-    exit 1;
-fi
-
-if [ -z $MY_SYNC_DIR ]
-then
-    MY_SYNC_DIR=savegames
-    echo "Using standard sync directory \"${MY_SYNC_DIR}\"."
-fi
-
-WEBDAV="$URL/remote.php/dav/files/${MY_USER}"
-
-
 
 if [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "yes" ]
 then
@@ -170,7 +177,7 @@ then
 # do the actual upload
 elif [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "no" ]
 then
-    curl -u ${MY_USER}:${MY_PASSWORD} -X MKCOL $WEBDAV/$MY_SYNC_DIR &> /dev/null || die "Could not create or check directory. Maybe Internet connection errors"
+    curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -X MKCOL $WEBDAV/$CLOUD_SYNC_DIR &> /dev/null || die "Could not create or check directory. Maybe Internet connection errors"
     IFS=', ' read -r -a GAMES_LIST <<< "$u"
     # check if all games are available
     # https://stackoverflow.com/questions/2312762/compare-difference-of-two-arrays-in-bash#28161520
@@ -209,9 +216,9 @@ then
                 deponia_pack ${PACK_DIR} ${k} 'Deponia 3'
                 ;;
         esac
-        curl -u ${MY_USER}:${MY_PASSWORD} -X MKCOL $WEBDAV/$MY_SYNC_DIR/${k} &> /dev/null || die
+        curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -X MKCOL $WEBDAV/$CLOUD_SYNC_DIR/${k} &> /dev/null || die
         echo "Uploading \"$k\" savegame"
-        curl -u ${MY_USER}:${MY_PASSWORD} -T ${PACK_DIR}/${k}.tar.gz $WEBDAV/$MY_SYNC_DIR/${k}/${k}.tar.gz || die "Upload of Game \"${k}\" failed"
+        curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -T ${PACK_DIR}/${k}.tar.gz $WEBDAV/$CLOUD_SYNC_DIR/${k}/${k}.tar.gz || die "Upload of Game \"${k}\" failed"
         rm -r $PACK_DIR
     done
 elif [ $UPLOAD = "no" ] && [ $DOWNLOAD = "yes" ]
@@ -236,7 +243,7 @@ then
     do
         PACK_DIR=$(mktemp -d /tmp/${k}.XXXXX)
         echo "Downloading savestate for \"${k}\""
-        curl --fail -u ${MY_USER}:${MY_PASSWORD} $WEBDAV/$MY_SYNC_DIR/${k}/${k}.tar.gz 1> $PACK_DIR/${k}.tar.gz 2> /dev/null || die "No Savestate of \"${k}\" found."
+        curl --fail -u ${CLOUD_USER}:${CLOUD_PASSWORD} $WEBDAV/$CLOUD_SYNC_DIR/${k}/${k}.tar.gz 1> $PACK_DIR/${k}.tar.gz 2> /dev/null || die "No Savestate of \"${k}\" found."
         echo "Unpacking savestate for \"${k}\""
         case $k in
             Celeste|Hacknet|Skullgirls|SuperHexagon)

@@ -11,6 +11,20 @@ a little script which provides a save game sync for every linux game added imple
 * Skullgirls
 * SuperHexagon
 
+## Configuration
+You need a configuration file in your home directory with the following content
+```bash
+CLOUD_DOMAIN="your.domain.name" # the domain name of your nextcloud/owncloud
+CLOUD_URL_PATH="somesubdiretory" # if you installed your owncloud on some subdirectory of your webroot you can add the path here. Can be empty
+CLOUD_USER=$YOUR_USERNAME # your Cloud username
+CLOUD_PASSWORD="$YOUR_PASSWORD" your Cloud password. If not set, password from standard input
+CLOUD_SYNC_DIR="$YOUR_WEBDAV_DIRECTORY" # directory in your owncloud webdav root. Standard configuration is "savegames"
+```
+If you don't want to use the configuration file, you can start the script wit set variables:
+```bash
+CLOUD_DOMAIN="you.domain.com CLOUD_USER=tux savegame_sync.sh -u "$Game1, $Game2"
+```
+
 
 ## Usage
 ```bash
