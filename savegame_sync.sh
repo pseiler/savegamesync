@@ -7,6 +7,13 @@ die(){
     exit 1
 }
 
+## prevent from running as root
+if [ $UID = 0 ]
+then
+    die "Do not run this script as root"
+fi
+
+
 ## check if every binary needed in this script is installed
 if [ ! -x /usr/bin/curl ] && [ ! -x /bin/curl ]
 then
