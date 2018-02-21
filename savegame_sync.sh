@@ -40,8 +40,9 @@ usage(){
     echo "$0 -h                  Shows this help message"
 }
 
-AVAIL_GAMES=(Celeste Deponia1 Deponia2 Deponia3 Hacknet HollowKnight HunieCamStudio HuniePop Skullgirls SuperHexagon SuperMeatBoy)
+AVAIL_GAMES=(Celeste Deponia1 Deponia2 Deponia3 Guacamelee Hacknet HollowKnight HunieCamStudio HuniePop Skullgirls SuperHexagon SuperMeatBoy)
 
+#########################################################
 #### Game specific commandos
 # local_share (Skullgirls, Hacknet, Celeste, SuperHexagon)
 localshare_pack(){
@@ -54,28 +55,19 @@ localshare_unpack(){
     fi
     tar -C ${HOME}/.local/share/  -xzf ${1}/${2}.tar.gz
 }
-# Deponia series
-deponia_pack(){
-    tar -C "${HOME}/.local/share/Daedalic Entertainment" -czf ${1}/${2}.tar.gz "${3}" &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
+###
+# localshare with developer subdirectory
+localsharedev_pack(){
+    tar -C "${HOME}/.local/share/${3}" -czf ${1}/${2}.tar.gz "${4}" &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
 }
-deponia_unpack(){
-    if [ ! -d "${HOME}/.local/share/Daedalic Entertainment" ]
+localsharedev_unpack(){
+    if [ ! -d "${HOME}/.local/share/${3}" ]
     then
-        mkdir -p "${HOME}/.local/share/Daedalic Entertainment"
+        mkdir -p "${HOME}/.local/share/${3}"
     fi
-    tar -C "${HOME}/.local/share/Daedalic Entertainment"  -xzf ${1}/${2}.tar.gz
+    tar -C "${HOME}/.local/share/${3}"  -xzf ${1}/${2}.tar.gz
 }
-# unity (HollowKnight HunieCamStudio HuniePop)
-unity_pack(){
-    tar -C "${HOME}/.config/unity3d/${3}/" -czf ${1}/${2}.tar.gz "${4}" &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
-}
-unity_unpack(){
-    if [ ! -d "${HOME}/.config/unity3d/${3}" ]
-    then
-        mkdir -p "${HOME}/.config/unity3d/${3}"
-    fi
-    tar -C "${HOME}/.config/unity3d/${3}/"  -xzf ${1}/${2}.tar.gz
-}
+###
 # config (StardewValley)
 config_pack(){
     tar -C "${HOME}/.config/" -czf ${1}/${2}.tar.gz ${2} &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
@@ -87,6 +79,21 @@ config_unpack(){
     fi
     tar -C "${HOME}/.config"  -xzf ${1}/${2}.tar.gz
 }
+###
+# unity (HollowKnight HunieCamStudio HuniePop)
+unity_pack(){
+    tar -C "${HOME}/.config/unity3d/${3}/" -czf ${1}/${2}.tar.gz "${4}" &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
+}
+unity_unpack(){
+    if [ ! -d "${HOME}/.config/unity3d/${3}" ]
+    then
+        mkdir -p "${HOME}/.config/unity3d/${3}"
+    fi
+    tar -C "${HOME}/.config/unity3d/${3}/"  -xzf ${1}/${2}.tar.gz
+}
+
+##########################################################
+
 setup_configuration(){
     if [ ! -d ${CONFIG_DIR} ];
     then
@@ -255,6 +262,18 @@ then
             Celeste|Hacknet|Skullgirls|SuperHexagon|SuperMeatBoy)
                 localshare_pack ${PACK_DIR} ${k}
                 ;;
+            Deponia1)
+                localsharedev_pack ${PACK_DIR} ${k} "Daedalic Entertainment" "Deponia"
+                ;;
+            Deponia2)
+                localsharedev_pack ${PACK_DIR} ${k} "Daedalic Entertainment" "Deponia 2"
+                ;;
+            Deponia3)
+                localsharedev_pack ${PACK_DIR} ${k} "Daedalic Entertainment" "Deponia 3"
+                ;;
+            Guacamelee)
+                localsharedev_pack ${PACK_DIR} ${k} "Drinkbox Studios" "${k}"
+                ;;
             HollowKnight)
                 unity_pack ${PACK_DIR} ${k} "Team Cherry" "Hollow Knight"
                 ;;
@@ -267,19 +286,10 @@ then
             StardewValley)
                 config_pack ${PACK_DIR} ${k}
                 ;;
-            Deponia1)
-                deponia_pack ${PACK_DIR} ${k} 'Deponia'
-                ;;
-            Deponia2)
-                deponia_pack ${PACK_DIR} ${k} 'Deponia 2'
-                ;;
-            Deponia3)
-                deponia_pack ${PACK_DIR} ${k} 'Deponia 3'
-                ;;
         esac
         echo "Creating remote savegame directory \"$CLOUD_SYNC_DIR/${k}\"..."
         curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -X MKCOL $WEBDAV/$CLOUD_SYNC_DIR/${k} &> /dev/null || die
-        echo "Uploading \"$k\" savegame"
+        echo "Uploading \"$k\" savegame..."
         curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -T ${PACK_DIR}/${k}.tar.gz $WEBDAV/$CLOUD_SYNC_DIR/${k}/${k}.tar.gz || die "Upload of Game \"${k}\" failed"
         rm -r $PACK_DIR
     done
@@ -304,12 +314,21 @@ then
     for k in ${GAMES_LIST[@]};
     do
         PACK_DIR=$(mktemp -d /tmp/${k}.XXXXX)
-        echo "Downloading savestate for \"${k}\""
+        echo "Downloading savestate for \"${k}\"..."
         curl --fail -u ${CLOUD_USER}:${CLOUD_PASSWORD} $WEBDAV/$CLOUD_SYNC_DIR/${k}/${k}.tar.gz 1> $PACK_DIR/${k}.tar.gz 2> /dev/null || die "No Savestate of \"${k}\" found."
-        echo "Unpacking savestate for \"${k}\""
+        echo "Unpacking savestate for \"${k}\"..."
         case $k in
             Celeste|Hacknet|Skullgirls|SuperHexagon|SuperMeatBoy)
                 localshare_unpack ${PACK_DIR} ${k}
+                ;;
+            Deponia1)
+                localsharedev_unpack ${PACK_DIR} ${k} "Daedalic Entertainment"
+                ;;
+            Deponia2)
+                localsharedev_unpack ${PACK_DIR} ${k} "Daedalic Entertainment"
+                ;;
+            Deponia3)
+                localsharedev_unpack ${PACK_DIR} ${k} "Daedalic Entertainment"
                 ;;
             HollowKnight)
                 unity_unpack ${PACK_DIR} ${k} "Team Cherry"
@@ -320,16 +339,8 @@ then
             StardewValley)
                 config_unpack ${PACK_DIR} ${k}
                 ;;
-            Deponia1)
-                deponia_unpack ${PACK_DIR} ${k}
-                ;;
-            Deponia2)
-                deponia_unpack ${PACK_DIR} ${k}
-                ;;
-            Deponia3)
-                deponia_unpack ${PACK_DIR} ${k}
-                ;;
         esac
         rm -r $PACK_DIR
     done
 fi
+exit 0
