@@ -12,7 +12,12 @@ a little script which provides a save game sync for every linux game added imple
 * SuperHexagon
 
 ## Configuration
-You need a configuration file in your home directory with the following content
+You need a configuration file in your home directory
+```bash
+user$ mkdir .savegame_sync
+user$ vim .savegame_sync/config.cfg
+```
+with the following content
 ```bash
 CLOUD_DOMAIN="your.domain.name" # the domain name of your nextcloud/owncloud
 CLOUD_URL_PATH="somesubdiretory" # if you installed your owncloud on some subdirectory of your webroot you can add the path here. Can be empty
