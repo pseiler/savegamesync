@@ -13,7 +13,7 @@ then
     die "Do not run this script as root"
 fi
 
-
+### Functions ###
 ## check if every binary needed in this script is installed
 if [ ! -x /usr/bin/curl ] && [ ! -x /bin/curl ]
 then
@@ -32,8 +32,7 @@ then
     die "\$HOME variable not set. script could have unforeseen behaviour"
 fi
 
-
-#usage/help function
+## usage/help function
 usage(){
     echo ""
     echo "$0 provides savegame sync features for your owncloud/nextcloud instance"
@@ -47,59 +46,18 @@ usage(){
     echo "$0 -h                  Shows this help message"
 }
 
-AVAIL_GAMES=(Celeste Deponia1 Deponia2 Deponia3 Guacamelee Hacknet HollowKnight HunieCamStudio HuniePop Skullgirls SuperHexagon SuperMeatBoy)
+## functions for archiving and extract games
 
-#########################################################
-#### Game specific commandos
-# local_share (Skullgirls, Hacknet, Celeste, SuperHexagon)
-localshare_pack(){
-    tar -C ${HOME}/.local/share/ -czf ${1}/${2}.tar.gz ${2} &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
+game_pack(){
+    tar -C "${HOME}/${1}" -czf ${2}/${3}.tar.gz "${4}" &> /dev/null || die "Packing of \"${3}\" failed. Maybe no savestate available"
 }
-localshare_unpack(){
-    if [ ! -d ${HOME}/.local/share/ ]
+game_unpack(){
+    if [ ! -d "${HOME}/${1}" ]
     then
-        mkdir -p ${HOME}/.local/share/
+        mkdir -p "${HOME}/${1}"
     fi
-    tar -C ${HOME}/.local/share/  -xzf ${1}/${2}.tar.gz
+    tar -C "${HOME}/${1}"  -xzf ${2}/${3}.tar.gz
 }
-###
-# localshare with developer subdirectory
-localsharedev_pack(){
-    tar -C "${HOME}/.local/share/${3}" -czf ${1}/${2}.tar.gz "${4}" &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
-}
-localsharedev_unpack(){
-    if [ ! -d "${HOME}/.local/share/${3}" ]
-    then
-        mkdir -p "${HOME}/.local/share/${3}"
-    fi
-    tar -C "${HOME}/.local/share/${3}"  -xzf ${1}/${2}.tar.gz
-}
-###
-# config (StardewValley)
-config_pack(){
-    tar -C "${HOME}/.config/" -czf ${1}/${2}.tar.gz ${2} &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
-}
-config_unpack(){
-    if [ ! -d "${HOME}/.config" ]
-    then
-        mkdir -p "${HOME}/.config"
-    fi
-    tar -C "${HOME}/.config"  -xzf ${1}/${2}.tar.gz
-}
-###
-# unity (HollowKnight HunieCamStudio HuniePop)
-unity_pack(){
-    tar -C "${HOME}/.config/unity3d/${3}/" -czf ${1}/${2}.tar.gz "${4}" &> /dev/null || die "Packing of \"${2}\" failed. Maybe no savestate available"
-}
-unity_unpack(){
-    if [ ! -d "${HOME}/.config/unity3d/${3}" ]
-    then
-        mkdir -p "${HOME}/.config/unity3d/${3}"
-    fi
-    tar -C "${HOME}/.config/unity3d/${3}/"  -xzf ${1}/${2}.tar.gz
-}
-
-##########################################################
 
 setup_configuration(){
     if [ ! -d ${CONFIG_DIR} ];
@@ -114,7 +72,7 @@ setup_configuration(){
     echo "CLOUD_DOMAIN=\"$TMP_DOMAIN\"" > ${CONFIG_DIR}/config.cfg
     ## webroot directory
     echo "Enter your Webservers directory where your Cloud is installed:"
-    echo "If you installed it directly into your webroot. leave it empty."
+    echo "(If you installed it directly into your webroot. leave it empty)"
     read -r TMP_URL_PATH
     if [ ! $TMP_URL_PATH = "" ]
     then
@@ -139,6 +97,11 @@ setup_configuration(){
     echo "CLOUD_SYNC_DIR=\"$TMP_SYNC_DIR\"" >> ${CONFIG_DIR}/config.cfg
     chmod 600 ${CONFIG_DIR}/config.cfg
 }
+
+########################################
+########################################
+
+AVAIL_GAMES=(Celeste Deponia1 Deponia2 Deponia3 Guacamelee Hacknet HollowKnight HunieCamStudio HuniePop Skullgirls SuperHexagon SuperMeatBoy)
 
 # Set upload and download to false
 UPLOAD="no"
@@ -187,22 +150,24 @@ while getopts ":u:d:hls" option; do
     esac
 done
 
-### Configuration directory reading. Check it if its present
+### exception handling and build some variable pathes
+
+# Configuration directory reading. Check it if its present
 if [ -f ${CONFIG_DIR}/config.cfg ];
 then
     source ${CONFIG_DIR}/config.cfg;
 fi;
 
-## Building URL from Domain name and url path
+# Building URL from Domain name and url path
 URL="https://${CLOUD_DOMAIN}/${CLOUD_URL_PATH}";
 
-#Check if domain parameter is present
+# Check if domain parameter is present
 if [ -z $CLOUD_DOMAIN ];
 then
     echo "No Nextcloud Domain entered";
     exit 1;
 fi
-#check if user and password provided
+# Check if user and password provided
 if [ -z $CLOUD_USER ]
 then
     die "No User provided"
@@ -223,6 +188,7 @@ then
     exit 1;
 fi
 
+# Check if Password is set. If not read it from stdin
 while [ -z $CLOUD_PASSWORD ];
 do
     echo ""
@@ -231,7 +197,7 @@ do
     read -rs CLOUD_PASSWORD
 done
 
-
+# check if both or no upload and download parameter is set
 if [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "yes" ]
 then
     echo "Cannot download and upload at the same time. Please use only one of the parameters"
@@ -242,12 +208,17 @@ then
     echo "No \$Game parameter was used"
     usage
     exit 1
+
 # do the actual upload
 elif [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "no" ]
 then
     echo "Creating remote Cloud directory \"$CLOUD_SYNC_DIR\" if not present..."
+    # create the webdav sync directory
     curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -X MKCOL $WEBDAV/$CLOUD_SYNC_DIR &> /dev/null || die "Could not create or check directory. Maybe Internet connection errors"
+
+    # Convert string with comma and space into array
     IFS=', ' read -r -a GAMES_LIST <<< "$u"
+
     # check if all games are available
     # https://stackoverflow.com/questions/2312762/compare-difference-of-two-arrays-in-bash#28161520
     for i in ${GAMES_LIST[@]};
@@ -267,31 +238,31 @@ then
         PACK_DIR=$(mktemp -d /tmp/${k}.XXXXX)
         case $k in
             Celeste|Hacknet|Skullgirls|SuperHexagon|SuperMeatBoy)
-                localshare_pack ${PACK_DIR} ${k}
+                game_pack "/.local/share/" ${PACK_DIR} ${k} ${k}
                 ;;
             Deponia1)
-                localsharedev_pack ${PACK_DIR} ${k} "Daedalic Entertainment" "Deponia"
+                game_pack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k} "Deponia"
                 ;;
             Deponia2)
-                localsharedev_pack ${PACK_DIR} ${k} "Daedalic Entertainment" "Deponia 2"
+                game_pack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k} "Deponia 2"
                 ;;
             Deponia3)
-                localsharedev_pack ${PACK_DIR} ${k} "Daedalic Entertainment" "Deponia 3"
+                game_pack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k} "Deponia 3"
                 ;;
             Guacamelee)
-                localsharedev_pack ${PACK_DIR} ${k} "Drinkbox Studios" "${k}"
+                game_pack "/.local/share/Drinkbox Studios" ${PACK_DIR} ${k} ${k}
                 ;;
             HollowKnight)
-                unity_pack ${PACK_DIR} ${k} "Team Cherry" "Hollow Knight"
+                game_pack "/.config/unity3d/Team Cherry" ${PACK_DIR} ${k} "Hollow Knight"
                 ;;
             HuniePop)
-                unity_pack ${PACK_DIR} ${k} "HuniePot" "HuniePop"
+                game_pack "/.config/unity3d/HuniePot" ${PACK_DIR} ${k} ${k}
                 ;;
             HunieCamStudio)
-                unity_pack ${PACK_DIR} ${k} "HuniePot" "HunieCam Studio"
+                game_pack "/.config/unity3d/HuniePot" ${PACK_DIR} ${k} "HunieCam Studio"
                 ;;
             StardewValley)
-                config_pack ${PACK_DIR} ${k}
+                game_pack "/.config/" ${PACK_DIR} ${k} ${k}
                 ;;
         esac
         echo "Creating remote savegame directory \"$CLOUD_SYNC_DIR/${k}\"..."
@@ -302,6 +273,7 @@ then
     done
 elif [ $UPLOAD = "no" ] && [ $DOWNLOAD = "yes" ]
 then
+    # Convert string with comma and space into array
     IFS=', ' read -r -a GAMES_LIST <<< "$d"
     # check if all games are available
     # https://stackoverflow.com/questions/2312762/compare-difference-of-two-arrays-in-bash#28161520
@@ -326,25 +298,19 @@ then
         echo "Unpacking savestate for \"${k}\"..."
         case $k in
             Celeste|Hacknet|Skullgirls|SuperHexagon|SuperMeatBoy)
-                localshare_unpack ${PACK_DIR} ${k}
+                game_unpack "/.local/share/" ${PACK_DIR} ${k}
                 ;;
-            Deponia1)
-                localsharedev_unpack ${PACK_DIR} ${k} "Daedalic Entertainment"
-                ;;
-            Deponia2)
-                localsharedev_unpack ${PACK_DIR} ${k} "Daedalic Entertainment"
-                ;;
-            Deponia3)
-                localsharedev_unpack ${PACK_DIR} ${k} "Daedalic Entertainment"
+            Deponia1|Deponia2|Deponia3)
+                game_unpack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k}
                 ;;
             HollowKnight)
-                unity_unpack ${PACK_DIR} ${k} "Team Cherry"
+                game_unpack "/.config/unity3d/Team Cherry" ${PACK_DIR} ${k}
                 ;;
             HuniePop|HunieCamStudio)
-                unity_unpack ${PACK_DIR} ${k} "HuniePot"
+                game_unpack "/.config/unity3d/HuniPot" ${PACK_DIR} ${k}
                 ;;
             StardewValley)
-                config_unpack ${PACK_DIR} ${k}
+                game_unpack "/.config/" ${PACK_DIR} ${k}
                 ;;
         esac
         rm -r $PACK_DIR
