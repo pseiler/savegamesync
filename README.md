@@ -1,11 +1,12 @@
 # Save Game Syncer with Owncloud/Nextcloud for Linux
-a little script which provides a save game sync for every linux game added implemented
+A little script which syncs (uploads and downloads) savegames for common linux games.
 
-## currently support
+## Currently supported Games
 * Celeste
 * Deponia1
 * Deponia2
 * Deponia3
+* Guacamelee
 * Hacknet
 * HollowKnight
 * HunieCamStudio
