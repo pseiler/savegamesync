@@ -36,7 +36,7 @@ CLOUD_SYNC_DIR="$YOUR_WEBDAV_DIRECTORY" # directory in your owncloud webdav root
 ```
 If you don't want to use the configuration file, you can start the script wit set variables:
 ```bash
-CLOUD_DOMAIN="you.domain.com CLOUD_USER=tux savegame_sync.sh -u "$Game1, $Game2"
+CLOUD_DOMAIN="your.domain.com" CLOUD_USER=tux savegame_sync.sh -u "$Game1, $Game2"
 ```
 
 
