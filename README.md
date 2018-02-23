@@ -41,28 +41,28 @@ CLOUD_DOMAIN="your.domain.com" CLOUD_USER=tux savegame_sync.sh -u "$Game1, $Game
 
 
 ## Usage
+Upload the files to your Cloud:
 ```bash
 savegame_sync.sh -u "$Game1, $Game2"
 ```
-uploads the files to your Cloud
 
+Download the files from your Cloud
+to the correct location:
 ```bash
 savegame_sync.sh -d "$Game1, $Game2"
 ```
-Downloads the files from your Cloud
-to the correct location
 
+List all available games:
 ```bash
 savegame_sync.sh -l
 ```
-Lists all available games
 
+Wizard for the configuration file:
 ```bash
 savegame_sync.sh -s
 ```
-Wizard for the configuration file
 
+Show the help message:
 ```bash
 savegame_sync.sh -h
 ```
-Shows this help message
