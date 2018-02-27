@@ -15,4 +15,12 @@
         <parent>.local/share/Daedalic Entertainment</parent>
         <gamedir>Deponia 2</gamedir>
     </game>
+    <game name="HollowKnight">
+        <parent>.config/unity3d/Team Cherry</parent>
+        <gamedir>Hollow Knight</gamedir>
+    </game>
+    <game name="OlliOlli">
+        <parent></parent>
+        <gamedir>.olliolli</gamedir>
+    </game>
 </games>

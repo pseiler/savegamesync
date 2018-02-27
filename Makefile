@@ -5,6 +5,6 @@ SCRIPT=savegame_sync
 bindir=$(PREFIX)/bin
 
 install:
-	        install -D -m0755 $(SCRIPT).sh $(DESTDIR)$(bindir)/$(SCRIPT)
+	        install -D -m0755 $(SCRIPT).py $(DESTDIR)$(bindir)/$(SCRIPT)
 uninstall:
 			rm $(DESTDIR)$(bindir)/$(SCRIPT)
