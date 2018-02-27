@@ -101,7 +101,7 @@ setup_configuration(){
 ########################################
 ########################################
 
-AVAIL_GAMES=(Celeste Deponia1 Deponia2 Deponia3 Guacamelee Hacknet HollowKnight HunieCamStudio HuniePop Skullgirls SuperHexagon SuperMeatBoy)
+AVAIL_GAMES=(AmnesiaADarkDescent Celeste Deponia1 Deponia2 Deponia3 Guacamelee Hacknet Hedgewars HollowKnight HunieCamStudio HuniePop OlliOlli OlliOlli2 Quake3 ShovelKnight Skullgirls SuperHexagon SuperMeatBoy TheEndIsNigh Teeworlds)
 
 # Set upload and download to false
 UPLOAD="no"
@@ -111,15 +111,16 @@ DOWNLOAD="no"
 CONFIG_DIR=${HOME}/.savegame_sync;
 
 # declare parameters for getopts
-while getopts ":u:d:hls" option; do
+while getopts ":udg:hls" option; do
     case "${option}" in
         u)
-            u=${OPTARG}
             UPLOAD="yes"
             ;;
         d)
-            d=${OPTARG}
             DOWNLOAD="yes"
+            ;;
+        g)
+            GAMES_LIST=${OPTARG}
             ;;
         l)
             echo "Available Games:"
@@ -197,6 +198,24 @@ do
     read -rs CLOUD_PASSWORD
 done
 
+# Convert string with comma and space into array
+IFS=', ' read -r -a GAMES_PARSED <<< "$GAMES_LIST"
+
+# check if all games are available
+# https://stackoverflow.com/questions/2312762/compare-difference-of-two-arrays-in-bash#28161520
+for i in ${GAMES_PARSED[@]};
+do
+    skip=
+    for j in ${AVAIL_GAMES[@]};
+    do
+        [[ $i == $j ]] && { skip=1; break; }
+    done
+    if ! [[ -n $skip ]]
+    then
+        die "Game \"${i}\" not found in supported Game list. Use \"$0 -l\"."
+    fi
+done
+
 # check if both or no upload and download parameter is set
 if [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "yes" ]
 then
@@ -208,40 +227,95 @@ then
     echo "No \$Game parameter was used"
     usage
     exit 1
+fi
+
+
+for k in ${GAMES_PARSED[@]};
+do
+    case $k in
+        Celeste|Hacknet|Skullgirls|SuperHexagon|SuperMeatBoy)
+            MY_PARENT_DIR=".local/share"
+            MY_DIR=${k}
+            ;;
+        AmnesiaADarkDescent)
+            MY_PARENT_DIR=".local/share"
+            MY_DIR=Amnesia
+            ;;
+        Deponia1)
+            MY_PARENT_DIR=".local/share/Daedalic Entertainment"
+            MY_DIR=Deponia
+            ;;
+        Deponia2)
+            game_pack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k} "Deponia 2"
+            ;;
+        Deponia3)
+            game_pack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k} "Deponia 3"
+            ;;
+        Guacamelee)
+            game_pack "/.local/share/Drinkbox Studios" ${PACK_DIR} ${k} ${k}
+            ;;
+        Hedgewars)
+            game_pack "" ${PACK_DIR} ${k} ".hedgewars"
+            ;;
+        HollowKnight)
+            game_pack "/.config/unity3d/Team Cherry" ${PACK_DIR} ${k} "Hollow Knight"
+            ;;
+        HuniePop)
+            game_pack "/.config/unity3d/HuniePot" ${PACK_DIR} ${k} ${k}
+            ;;
+        HunieCamStudio)
+            game_pack "/.config/unity3d/HuniePot" ${PACK_DIR} ${k} "HunieCam Studio"
+            ;;
+        OlliOlli)
+            game_pack "" ${PACK_DIR} ${k} ".olliolli"
+            ;;
+        OlliOlli2)
+            game_pack "" ${PACK_DIR} ${k} ".olliolli2"
+            ;;
+        Quake3)
+            game_pack "" ${PACK_DIR} ${k} ".q3a"
+            ;;
+        ShovelKnight)
+            game_pack "/.local/share/Yacht Club Games" ${PACK_DIR} ${k} "Shovel Knight"
+            ;;
+        StardewValley)
+            game_pack "/.config/" ${PACK_DIR} ${k} ${k}
+            ;;
+        TheEndIsNigh)
+            game_pack "/.local/share/" ${PACK_DIR} ${k} "The End is Nigh"
+            ;;
+        Teeworlds)
+            game_pack "" ${PACK_DIR} ${k} ".teeworlds"
+            ;;
+    esac
+done
+
 
 # do the actual upload
-elif [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "no" ]
+if [ $UPLOAD = "yes" ] && [ $DOWNLOAD = "no" ]
 then
     echo "Creating remote Cloud directory \"$CLOUD_SYNC_DIR\" if not present..."
     # create the webdav sync directory
     curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -X MKCOL $WEBDAV/$CLOUD_SYNC_DIR &> /dev/null || die "Could not create or check directory. Maybe Internet connection errors"
 
-    # Convert string with comma and space into array
-    IFS=', ' read -r -a GAMES_LIST <<< "$u"
-
-    # check if all games are available
-    # https://stackoverflow.com/questions/2312762/compare-difference-of-two-arrays-in-bash#28161520
-    for i in ${GAMES_LIST[@]};
-    do
-        skip=
-        for j in ${AVAIL_GAMES[@]};
-        do
-            [[ $i == $j ]] && { skip=1; break; }
-        done
-        if ! [[ -n $skip ]]
-        then
-            die "Game \"${i}\" not found in supported Game list. Use \"$0 -l\"."
-        fi
-    done
-    for k in ${GAMES_LIST[@]};
+    for k in ${GAMES_PARSED[@]};
     do
         PACK_DIR=$(mktemp -d /tmp/${k}.XXXXX)
         case $k in
             Celeste|Hacknet|Skullgirls|SuperHexagon|SuperMeatBoy)
-                game_pack "/.local/share/" ${PACK_DIR} ${k} ${k}
+#                game_pack "/.local/share/" ${PACK_DIR} ${k} ${k}
+                MY_PARENT_DIR=".local/share"
+                MY_DIR=${k}
+                ;;
+            AmnesiaADarkDescent)
+#                game_pack "/.frictionalgames" ${PACK_DIR} ${k} Amnesia
+                MY_PARENT_DIR=".local/share"
+                MY_DIR=Amnesia
                 ;;
             Deponia1)
-                game_pack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k} "Deponia"
+#                game_pack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k} "Deponia"
+                MY_PARENT_DIR=".local/share/Daedalic Entertainment"
+                MY_DIR=Deponia
                 ;;
             Deponia2)
                 game_pack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k} "Deponia 2"
@@ -252,6 +326,9 @@ then
             Guacamelee)
                 game_pack "/.local/share/Drinkbox Studios" ${PACK_DIR} ${k} ${k}
                 ;;
+            Hedgewars)
+                game_pack "" ${PACK_DIR} ${k} ".hedgewars"
+                ;;
             HollowKnight)
                 game_pack "/.config/unity3d/Team Cherry" ${PACK_DIR} ${k} "Hollow Knight"
                 ;;
@@ -261,10 +338,29 @@ then
             HunieCamStudio)
                 game_pack "/.config/unity3d/HuniePot" ${PACK_DIR} ${k} "HunieCam Studio"
                 ;;
+            OlliOlli)
+                game_pack "" ${PACK_DIR} ${k} ".olliolli"
+                ;;
+            OlliOlli2)
+                game_pack "" ${PACK_DIR} ${k} ".olliolli2"
+                ;;
+            Quake3)
+                game_pack "" ${PACK_DIR} ${k} ".q3a"
+                ;;
+            ShovelKnight)
+                game_pack "/.local/share/Yacht Club Games" ${PACK_DIR} ${k} "Shovel Knight"
+                ;;
             StardewValley)
                 game_pack "/.config/" ${PACK_DIR} ${k} ${k}
                 ;;
+            TheEndIsNigh)
+                game_pack "/.local/share/" ${PACK_DIR} ${k} "The End is Nigh"
+                ;;
+            Teeworlds)
+                game_pack "" ${PACK_DIR} ${k} ".teeworlds"
+                ;;
         esac
+        game_pack $MY_PARENT_DIR ${PACK_DIR} ${k} ${MY_DIR}
         echo "Creating remote savegame directory \"$CLOUD_SYNC_DIR/${k}\"..."
         curl -u ${CLOUD_USER}:${CLOUD_PASSWORD} -X MKCOL $WEBDAV/$CLOUD_SYNC_DIR/${k} &> /dev/null || die
         echo "Uploading \"$k\" savegame..."
@@ -273,32 +369,18 @@ then
     done
 elif [ $UPLOAD = "no" ] && [ $DOWNLOAD = "yes" ]
 then
-    # Convert string with comma and space into array
-    IFS=', ' read -r -a GAMES_LIST <<< "$d"
-    # check if all games are available
-    # https://stackoverflow.com/questions/2312762/compare-difference-of-two-arrays-in-bash#28161520
-    for i in ${GAMES_LIST[@]};
-    do
-        skip=
-        for j in ${AVAIL_GAMES[@]};
-        do
-            [[ $i == $j ]] && { skip=1; break; }
-        done
-        if ! [[ -n $skip ]]
-        then
-            echo "Game \"$i\" not found"
-            exit 1
-        fi
-    done
-    for k in ${GAMES_LIST[@]};
+    for k in ${GAMES_PARSED[@]};
     do
         PACK_DIR=$(mktemp -d /tmp/${k}.XXXXX)
         echo "Downloading savestate for \"${k}\"..."
         curl --fail -u ${CLOUD_USER}:${CLOUD_PASSWORD} $WEBDAV/$CLOUD_SYNC_DIR/${k}/${k}.tar.gz 1> $PACK_DIR/${k}.tar.gz 2> /dev/null || die "No Savestate of \"${k}\" found."
         echo "Unpacking savestate for \"${k}\"..."
         case $k in
-            Celeste|Hacknet|Skullgirls|SuperHexagon|SuperMeatBoy)
+            Celeste|Hacknet|Skullgirls|SuperHexagon|SuperMeatBoy|TheEndIsNigh)
                 game_unpack "/.local/share/" ${PACK_DIR} ${k}
+                ;;
+            AmnesiaADarkDescent)
+                game_pack "/.frictionalgames" ${PACK_DIR} ${k}
                 ;;
             Deponia1|Deponia2|Deponia3)
                 game_unpack "/.local/share/Daedalic Entertainment" ${PACK_DIR} ${k}
@@ -308,6 +390,12 @@ then
                 ;;
             HuniePop|HunieCamStudio)
                 game_unpack "/.config/unity3d/HuniPot" ${PACK_DIR} ${k}
+                ;;
+            Hedgewars|OlliOlli|OlliOlli2|Quake3|Teeworlds)
+                game_unpack "" ${PACK_DIR} ${k}
+                ;;
+            ShovelKnight)
+                game_unpack "/.local/share/Yacht Club Games" ${PACK_DIR} ${k}
                 ;;
             StardewValley)
                 game_unpack "/.config/" ${PACK_DIR} ${k}

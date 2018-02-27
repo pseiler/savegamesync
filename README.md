@@ -2,18 +2,26 @@
 A little script which syncs (uploads and downloads) savegames for common linux games.
 
 ## Currently supported Games
+* AmnesiaADarkDescent
 * Celeste
 * Deponia1
 * Deponia2
 * Deponia3
 * Guacamelee
 * Hacknet
+* Hedgewars
 * HollowKnight
 * HunieCamStudio
 * HuniePop
+* OlliOlli
+* OlliOlli2
+* Quake3
+* ShovelKnight
 * Skullgirls
 * SuperHexagon
 * SuperMeatBoy
+* TheEndIsNigh
+* Teeworlds
 
 ## Configuration
 You need a configuration file in your home directory

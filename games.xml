@@ -1,0 +1,18 @@
+<games>
+    <game name="Celeste">
+        <parent>.local/share</parent>
+        <gamedir>Celeste</gamedir>
+    </game>
+    <game name="Deponia1">
+        <parent>.local/share/Daedalic Entertainment</parent>
+        <gamedir>Deponia</gamedir>
+    </game>
+    <game name="Deponia2">
+        <parent>.local/share/Daedalic Entertainment</parent>
+        <gamedir>Deponia 2</gamedir>
+    </game>
+    <game name="Deponia3">
+        <parent>.local/share/Daedalic Entertainment</parent>
+        <gamedir>Deponia 2</gamedir>
+    </game>
+</games>
