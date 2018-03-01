@@ -307,7 +307,7 @@ for element in games_array:
             tar.close()
             # check if directory of specific game exists. If not create it
             if ( curl_test(my_webdav + '/' + my_sync_dir + '/' + element, my_user, my_password) == 404 ):
-                print "Creating the game directory %s" % element
+                print "Creating the remote game directory \"%s\"..." % element
                 curl_mkdir(my_webdav + '/' + my_sync_dir + '/' + element, my_user, my_password)
 
             # Do the actual curl curl upload
