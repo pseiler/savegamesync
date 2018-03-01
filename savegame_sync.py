@@ -295,7 +295,7 @@ for element in games_array:
     if upload:
         # check if directory of game exists. Otherwhite print an error and exit
         if not os.path.exists(fulldir):
-            print "Error: Path \"%s\" doesn't exist." % fulldir
+            print "Warning: Path \"%s\" doesn't exist." % fulldir
             print "Do you have a local %s of \"%s\"" % (savegame, element)
             print
         else:
