@@ -1,4 +1,5 @@
-# Save Game Syncer with Owncloud/Nextcloud for Linux
+# savegame\_sync
+## Save Game Syncer with Owncloud/Nextcloud for Linux
 A little script which syncs (uploads and downloads) savegames for common linux games.
 
 ## Currently supported Games

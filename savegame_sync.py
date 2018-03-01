@@ -180,7 +180,7 @@ for opt, arg in opts:
         print "---------------"
         print
         for games in sorted(avail_games):
-            print '* ' + games
+            print games
         sys.exit(0)
     elif opt in ('--games'):
         games = arg
@@ -260,6 +260,16 @@ elif download and upload:
     usage()
     sys.exit(2)
 
+if upload:
+    # check if sync directory exists. If not create it
+    if ( curl_test(my_webdav + '/' + my_sync_dir, my_user, my_password) == 404 ):
+        print "Creating the sync directory \"%s\"" % my_sync_dir
+        add_dir = my_webdav
+        for i in my_sync_dir.split('/'):
+            add_dir = add_dir + '/' + i
+            curl_mkdir(add_dir, my_user, my_password)
+        print
+
 for element in games_array:
     my_file_url = my_webdav + '/' + my_sync_dir + '/' + element + '/' + element + '.tar.gz'
     for i in xml_parsed.findall('game'):
@@ -267,63 +277,62 @@ for element in games_array:
             parent = i.find('parent').text
             gamedir = i.find('gamedir').text
 ## Doings when uploading
+    # check if parent directory is set. Some directories do not have a parent part. Such like OlliOlli
+    # create temporary directory
+    tmp_dir = mkdtemp(prefix="%s." % (element))
+
+    if parent:
+        fulldir = "%s/%s/%s" % (my_home, parent, gamedir)
+    else:
+        fulldir = "%s/%s" % (my_home, gamedir)
     # check if upload parameter is set
     if upload:
-        # check if parent directory is set. Some directories do not have a parent part. Such like OlliOlli
-        if parent:
-            fulldir = "%s/%s/%s" % (my_home, parent, gamedir)
-        else:
-            fulldir = "%s/%s" % (my_home, gamedir)
         # check if directory of game exists. Otherwhite print an error and exit
         if not os.path.exists(fulldir):
-            print "Path \"%s\" doesn't exist." % fulldir
+            print "Error: Path \"%s\" doesn't exist." % fulldir
             print "Do you have a local %s of \"%s\"" % (savegame, element)
-            sys.exit(2)
-#       create temporary directory
-        tmp_dir = mkdtemp(prefix="%s." % (element))
+            print
+        else:
+            # creating tar file
+            print "Creating archive for \"%s\"..." % element
+            tar = tarfile.open(tmp_dir + '/' + element + '.tar.gz', "w:gz")
+            tar.add(fulldir, arcname=gamedir )
+            tar.close()
+            # check if directory of specific game exists. If not create it
+            if ( curl_test(my_webdav + '/' + my_sync_dir + '/' + element, my_user, my_password) == 404 ):
+                print "Creating the game directory %s" % element
+                curl_mkdir(my_webdav + '/' + my_sync_dir + '/' + element, my_user, my_password)
 
-        # creating tar file
-        print "Creating archive for \"%s\"..." % element
-        tar = tarfile.open(tmp_dir + '/' + element + '.tar.gz', "w:gz")
-        tar.add(fulldir, arcname=gamedir )
-        tar.close()
-        # check if sync directory exists. If not create it
-        if ( curl_test(my_webdav + '/' + my_sync_dir, my_user, my_password) == 404 ):
-            print "Creating the sync directory %s" % my_sync_dir
-            curl_mkdir(my_webdav + '/' + my_sync_dir, my_user, my_password)
-        # check if directory of specific game exists. If not create it
-        if ( curl_test(my_webdav + '/' + my_sync_dir + '/' + element, my_user, my_password) == 404 ):
-            print "Creating the game directory %s" % element
-            curl_mkdir(my_webdav + '/' + my_sync_dir + '/' + element, my_user, my_password)
-
-        # Do the actual curl curl upload
-        print "Uploading \"%s\" %s..." % (element, savegame)
-        curl_upload(my_file_url, tmp_dir + '/' + element + '.tar.gz', my_user, my_password)
-
-        # removing temporary tar file in tmp directory
-        rmtree(tmp_dir)
+            # Do the actual curl curl upload
+            print "Uploading \"%s\" %s..." % (element, savegame)
+            curl_upload(my_file_url, tmp_dir + '/' + element + '.tar.gz', my_user, my_password)
+            print
 
 ## Doings when downloading
     # check if download parameter is set
     elif download:
         #check if backup of savestate is available remote
         if ( curl_test(my_webdav + '/' + my_sync_dir + '/' + element + '/' + element + '.tar.gz', my_user, my_password) == 404 ):
-            print "Warning: Savestate \"%s\" not found on remote Server \"%s\"" % (element, my_domain)
-        # creating temporary directory
-        tmp_dir = mkdtemp(prefix="%s." % (element))
+            print "Warning: Savestate \"%s\" not found on remote Server \"%s\"." % (element, my_domain)
+            print "Cannot sync savestate from Cloud"
+            print
 
-        # download the file to temp dir
-        print "Downloading the %s of \"%s\"..." % (savegame, element)
-        curl_download(my_file_url, tmp_dir + '/' + element + '.tar.gz', my_user, my_password)
-        # extract the tar file
-        print "Extracting %s of \"%s\"..." % (savegame, element)
-        tar = tarfile.open(tmp_dir + '/' + element + '.tar.gz', "r:gz")
-        # check if parent variable is set. Change extract path if not set. Usefull for games like OlliOlli
-        if parent:
-            tar.extractall(path=my_home + '/' + parent)
         else:
-            tar.extractall(path=my_home)
-        tar.close()
-        rmtree(tmp_dir)
+            # download the file to temp dir
+            print "Downloading the %s of \"%s\"..." % (savegame, element)
+            curl_download(my_file_url, tmp_dir + '/' + element + '.tar.gz', my_user, my_password)
+            # extract the tar file
+            print "Extracting %s of \"%s\"..." % (savegame, element)
+            print
+            tar = tarfile.open(tmp_dir + '/' + element + '.tar.gz', "r:gz")
+            # check if parent variable is set. Change extract path if not set. Usefull for games like OlliOlli
+            if parent:
+                tar.extractall(path=my_home + '/' + parent)
+            else:
+                tar.extractall(path=my_home)
+            tar.close()
+
+    # removing temporary tar file in tmp directory
+    rmtree(tmp_dir)
 
 sys.exit(0)
