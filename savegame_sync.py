@@ -14,9 +14,15 @@ try:
 except ImportError:
         from StringIO import StringIO as BytesIO
 
+# define base variables
 script_name = os.path.basename(__file__)
 savegame = "savestate"
 
+# check if script is running as root
+if os.getuid() == 0:
+    print "%s is not designed to run as root. Please" % script_name
+    print "use a normal user account."
+    sys.exit(2)
 
 ##### functions
 def usage():
@@ -104,13 +110,48 @@ def config_has_option(object, section, option, path):
     if not object.has_option(section, option):
         print "No attribute \"%s\" in \"%s\"" % (option, path)
         sys.exit(2)
+
+# Setting booleans to false (used to control the behaviour of the script
 download = False
 upload = False
 games_enabled = False
 
+# setting the home variable
 my_home = os.environ['HOME']
 config_path = "%s/.savegame_sync.conf" % my_home
-xml_parsed = xml.etree.ElementTree.parse('games.xml').getroot()
+
+# check if the games.xml is in any of the following pathes
+## read bash environment variable
+xdg_tmp = os.environ['XDG_DATA_DIRS']
+# convert it to a list
+xdg_data_dir = xdg_tmp.split(':')
+
+# add for every found list entry and subdirectory with the name of the script
+for i in xrange(len(xdg_data_dir)):
+    xdg_data_dir[i] = xdg_data_dir[i] + '/' + script_name
+
+# remove unneeded variable from above
+del xdg_tmp
+
+# add the scripts directory to directory searching for the script
+xdg_data_dir.append(os.path.dirname(os.path.abspath(__file__)))
+
+# set the directory for games.xml. ordering: /usr/local/share -> /usr/share -> script directory
+for i in xdg_data_dir:
+    if os.path.exists(i + "/games.xml"):
+        games_config = i + "/games.xml"
+
+try: games_config
+except NameError:
+    print "No valid \"games.xml\" found."
+    print "Put it in one of the following directories:"
+    print ""
+    for i in xdg_data_dir:
+        print i + '/'
+    sys.exit(2)
+
+# read the xml file
+xml_parsed = xml.etree.ElementTree.parse(games_config).getroot()
 
 # create game list from xml
 avail_games = []
@@ -169,6 +210,12 @@ if mismatch:
         print i
     sys.exit(2)
 
+
+# check if configuration file exists on filesystem
+if not os.path.exists(config_path):
+    print "Configuration file doesn't exist"
+    print "Use \"%s --setup\" to create one." % script_name
+    sys.exit(2)
 
 ## read configuration file
 myconfig = ConfigParser.ConfigParser()

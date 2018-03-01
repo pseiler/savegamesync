@@ -1,10 +1,14 @@
 VERSION = 3.02
 PREFIX=/usr/local
 DESTDIR=
-SCRIPT=savegame_sync
+NAME=savegame_sync
 bindir=$(PREFIX)/bin
+sharedir=$(PREFIX)/share
+games=games.xml
 
 install:
-	        install -D -m0755 $(SCRIPT).py $(DESTDIR)$(bindir)/$(SCRIPT)
+	        install -D -m0755 $(NAME).py $(DESTDIR)$(bindir)/$(NAME)
+	        install -D -m0644 $(games) $(DESTDIR)$(sharedir)/$(NAME)/$(games)
 uninstall:
-			rm $(DESTDIR)$(bindir)/$(SCRIPT)
+			rm $(DESTDIR)$(bindir)/$(NAME)
+	        rm -r $(DESTDIR)$(sharedir)/$(NAME)

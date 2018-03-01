@@ -62,5 +62,3 @@ savegame_sync.sh -h [--help]
 * save password hashed
 * get password from stdin
 * add functionality to up/download all with "all" string.
-* Check several pathes for games.xml (/usr/share, /usr/local/share, $HOME/.local/share ./)
-* prevent running the script as root
