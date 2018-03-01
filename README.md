@@ -59,6 +59,11 @@ Show the help message:
 savegame_sync.sh -h [--help]
 ```
 
+Show the program version:
+```bash
+savegame_sync.sh -v [--version]
+```
+
 ## ToDos
 * save password hashed
 * get password from stdin

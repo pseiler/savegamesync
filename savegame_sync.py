@@ -17,6 +17,7 @@ except ImportError:
 # define base variables
 script_name = os.path.basename(__file__)
 savegame = "savestate"
+version = "0.0.1"
 
 # check if script is running as root
 if os.getuid() == 0:
@@ -28,16 +29,18 @@ if os.getuid() == 0:
 def usage():
     print "Usage:"
     print "%s -u [--upload] --games \"$Game1, $Game2\"   uploads the files to your Cloud" % script_name
-    print ""
+    print
     print "%s -d [--download] --games \"$Game1, $Game2\" downloads the files from your Cloud" % script_name
     print "                                                          to the correct location" 
-    print ""
+    print
     print "%s -l [--list]                              lists all available games" % script_name
-    print ""
+    print
     print "%s -s [--setup]                             Wizard for the configuration file" % script_name
-    print ""
+    print
     print "%s -h [--help]                              Shows this help message" % script_name
-    print ""
+    print
+    print "%s -v [--version]                           Shows %s\'s version" % (script_name, script_name)
+    print
 
 def curl_test(url, user, password):
     buffer = BytesIO()
@@ -160,7 +163,7 @@ for game in xml_parsed.findall('game'):
 
 # define parameters
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'dushl', ['help', 'list', 'upload', 'download','games=', 'setup'])
+    opts, args = getopt.getopt(sys.argv[1:], 'dushlv', ['help', 'list', 'upload', 'download','games=', 'setup', 'version'])
 except getopt.GetoptError:
     print "Wrong arguments given."
     usage()
@@ -187,6 +190,9 @@ for opt, arg in opts:
         games_enabled = True
     elif opt in ('-s', '--setup'):
         setup_config(config_path)
+        sys.exit(0)
+    elif opt in ('-v', '--version'):
+        print script_name + ' v' + version
         sys.exit(0)
     else:
         print "No arguments given"
