@@ -62,3 +62,4 @@ savegame_sync.sh -h [--help]
 * save password hashed
 * get password from stdin
 * add functionality to up/download all with "all" string.
+* use python setup.py instad of Makefile
