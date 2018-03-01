@@ -87,12 +87,12 @@ def curl_download(url, local_file, user, password):
 def setup_config(path_to_config):
     config_domain = raw_input("Domain address for your Cloud [your.cloud.domain]: ")
     config_user = raw_input("User for your Cloud: ")
-    pw_check = 1
-    while (pw_check == 1):
+    pw_check = False
+    while not pw_check:
         config_password = getpass.getpass("Password for your Cloud: ")
         config_password_check = getpass.getpass("Repeat password: ")
         if (config_password == config_password_check):
-            pw_check = 0
+            pw_check = True
         else:
             print "Passwords didn't match. Try again"
     config_sync_dir = raw_input("Sync directory for your Cloud [savegames] (can be empty): ")
@@ -108,6 +108,7 @@ def setup_config(path_to_config):
         if config_sync_dir:
             config_setup.set('main', 'sync_dir', config_sync_dir)
         config_setup.write(f)
+    print "Wrote configuration file \"%s\"." % path_to_config
 
 def config_has_option(object, section, option, path):
     if not object.has_option(section, option):
@@ -328,15 +329,21 @@ for element in games_array:
             print "Downloading the %s of \"%s\"..." % (savegame, element)
             curl_download(my_file_url, tmp_dir + '/' + element + '.tar.gz', my_user, my_password)
             # extract the tar file
-            print "Extracting %s of \"%s\"..." % (savegame, element)
-            print
             tar = tarfile.open(tmp_dir + '/' + element + '.tar.gz', "r:gz")
             # check if parent variable is set. Change extract path if not set. Usefull for games like OlliOlli
             if parent:
+                # check if parent directories of game exists. If not create everything
+                if not os.path.exists(my_home + '/' + parent):
+                    print "Creating parent directory \"%s\"..." % parent
+                    os.makedirs(my_home + '/' + parent, 0775)
+
+                print "Extracting %s of \"%s\"..." % (savegame, element)
                 tar.extractall(path=my_home + '/' + parent)
             else:
                 tar.extractall(path=my_home)
+                print "Extracting %s of \"%s\"..." % (savegame, element)
             tar.close()
+            print
 
     # removing temporary tar file in tmp directory
     rmtree(tmp_dir)

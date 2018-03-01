@@ -7,6 +7,14 @@
         <parent>.frictionalgames</parent>
         <gamedir>Amnesia</gamedir>
     </game>
+    <game name="BioshockInfinite">
+        <parent>.local/share/irrationalgames</parent>
+        <gamedir>bioshockinfinite</gamedir>
+    </game>
+    <game name="BitTripRunner">
+        <parent>.gajin_games</parent>
+        <gamedir>bit.trip.runner</gamedir>
+    </game>
     <game name="Celeste">
         <parent>.local/share</parent>
         <gamedir>Celeste</gamedir>
@@ -22,6 +30,26 @@
     <game name="Deponia3">
         <parent>.local/share/Daedalic Entertainment</parent>
         <gamedir>Deponia 2</gamedir>
+    </game>
+    <game name="Doom3">
+        <parent></parent>
+        <gamedir>.doom3</gamedir>
+    </game>
+    <game name="DungeonDefenders">
+        <parent>.local/share</parent>
+        <gamedir>DungeonDefenders</gamedir>
+    </game>
+    <game name="DustAnElysianTail">
+        <parent>.local/share</parent>
+        <gamedir>DustAET</gamedir>
+    </game>
+    <game name="EnemyTerritoryQuakeWars">
+        <parent></parent>
+        <gamedir>.etqwcl</gamedir>
+    </game>
+    <game name="Gish">
+        <parent></parent>
+        <gamedir>.gish</gamedir>
     </game>
     <game name="Guacamelee">
         <parent>.local/share/Drinkbox Studios</parent>
@@ -39,6 +67,14 @@
         <parent>.config/unity3d/Team Cherry</parent>
         <gamedir>Hollow Knight</gamedir>
     </game>
+    <game name="HotlineMiami">
+        <parent>.local/share</parent>
+        <gamedir>HotlineMiami</gamedir>
+    </game>
+    <game name="HotlineMiami2">
+        <parent>.local/share</parent>
+        <gamedir>HotlineMiami2</gamedir>
+    </game>
     <game name="HuniePop">
         <parent>.config/unity3d/HuniePot</parent>
         <gamedir>HuniePop</gamedir>
@@ -46,6 +82,26 @@
     <game name="HunieCamStudio">
         <parent>.config/unity3d/HuniePot</parent>
         <gamedir>HunieCam Studio</gamedir>
+    </game>
+    <game name="Jamestown">
+        <parent></parent>
+        <gamedir>.jamestown</gamedir>
+    </game>
+    <game name="KatawaShoujo">
+        <parent>.renpy</parent>
+        <gamedir>katawashoujo_actual</gamedir>
+    </game>
+    <game name="Limbo">
+        <parent></parent>
+        <gamedir>.limbo</gamedir>
+    </game>
+    <game name="MarkOfTheNinja">
+        <parent>.klei</parent>
+        <gamedir>ninja</gamedir>
+    </game>
+    <game name="NaturalSelection2">
+        <parent>.config</parent>
+        <gamedir>Natural Selection 2</gamedir>
     </game>
     <game name="OlliOlli">
         <parent></parent>
@@ -55,9 +111,41 @@
         <parent></parent>
         <gamedir>.olliolli2</gamedir>
     </game>
+    <game name="OpenArena">
+        <parent></parent>
+        <gamedir>.openarena</gamedir>
+    </game>
+    <game name="Postal2">
+        <parent>.lgp</parent>
+        <gamedir>postal2</gamedir>
+    </game>
+    <game name="Psychonauts">
+        <parent>.local/share</parent>
+        <gamedir>Psychonauts</gamedir>
+    </game>
     <game name="Quake3">
         <parent></parent>
         <gamedir>.q3a</gamedir>
+    </game>
+    <game name="Quake4">
+        <parent></parent>
+        <gamedir>.quake4</gamedir>
+    </game>
+    <game name="Rochard">
+        <parent>.config/unity3d/Recoil Games</parent>
+        <gamedir>Rochard</gamedir>
+    </game>
+    <game name="Rust">
+        <parent>.config/unity3d/Facepunch Studios</parent>
+        <gamedir>PlayRust</gamedir>
+    </game>
+    <game name="Shank1">
+        <parent>.local/share</parent>
+        <gamedir>Shank</gamedir>
+    </game>
+    <game name="Shank2">
+        <parent>.klei</parent>
+        <gamedir>shank2</gamedir>
     </game>
     <game name="ShovelKnight">
         <parent>.local/share/Yacht Club Games</parent>
@@ -79,8 +167,36 @@
         <parent>.local/share</parent>
         <gamedir>SuperMeatBoy</gamedir>
     </game>
+    <game name="SurgeonSimulator2013">
+        <parent>.config/unity3d/Bossa Studios</parent>
+        <gamedir>Surgeon Simulator 2013</gamedir>
+    </game>
+    <game name="SwordsAndSoldiers">
+        <parent>.ronimo-games</parent>
+        <gamedir>swords_and_soldiers</gamedir>
+    </game>
+    <game name="TheBindingOfIsaacRebirth">
+        <parent>.local/share</parent>
+        <gamedir>binding of isaac rebirth</gamedir>
+    </game>
     <game name="TheEndIsNigh">
         <parent>.local/share</parent>
         <gamedir>The End is Nigh</gamedir>
+    </game>
+    <game name="Torchlight1">
+        <parent>.runicgames</parent>
+        <gamedir>Torchlight</gamedir>
+    </game>
+    <game name="Torchlight2">
+        <parent>.local/share/Runic Games</parent>
+        <gamedir>Torchlight 2</gamedir>
+    </game>
+    <game name="UT2004">
+        <parent></parent>
+        <gamedir>.ut2004</gamedir>
+    </game>
+    <game name="Vessel">
+        <parent>.local/share</parent>
+        <gamedir>Vessel</gamedir>
     </game>
 </games>
