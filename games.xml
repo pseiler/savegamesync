@@ -1,4 +1,12 @@
 <games>
+    <game name="Teeworlds">
+        <parent></parent>
+        <gamedir>.teeworlds</gamedir>
+    </game>
+    <game name="AmnesiaADarkDescent">
+        <parent>.frictionalgames</parent>
+        <gamedir>Amnesia</gamedir>
+    </game>
     <game name="Celeste">
         <parent>.local/share</parent>
         <gamedir>Celeste</gamedir>
@@ -15,12 +23,64 @@
         <parent>.local/share/Daedalic Entertainment</parent>
         <gamedir>Deponia 2</gamedir>
     </game>
+    <game name="Guacamelee">
+        <parent>.local/share/Drinkbox Studios</parent>
+        <gamedir>Guacamelee</gamedir>
+    </game>
+    <game name="Hacknet">
+        <parent>.local/share</parent>
+        <gamedir>Hacknet</gamedir>
+    </game>
+    <game name="Hedgewars">
+        <parent></parent>
+        <gamedir>.hedgewars</gamedir>
+    </game>
     <game name="HollowKnight">
         <parent>.config/unity3d/Team Cherry</parent>
         <gamedir>Hollow Knight</gamedir>
     </game>
+    <game name="HuniePop">
+        <parent>.config/unity3d/HuniePot</parent>
+        <gamedir>HuniePop</gamedir>
+    </game>
+    <game name="HunieCamStudio">
+        <parent>.config/unity3d/HuniePot</parent>
+        <gamedir>HunieCam Studio</gamedir>
+    </game>
     <game name="OlliOlli">
         <parent></parent>
         <gamedir>.olliolli</gamedir>
+    </game>
+    <game name="OlliOlli2">
+        <parent></parent>
+        <gamedir>.olliolli2</gamedir>
+    </game>
+    <game name="Quake3">
+        <parent></parent>
+        <gamedir>.q3a</gamedir>
+    </game>
+    <game name="ShovelKnight">
+        <parent>.local/share/Yacht Club Games</parent>
+        <gamedir>Shovel Knight</gamedir>
+    </game>
+    <game name="Skullgirls">
+        <parent>.local/share</parent>
+        <gamedir>Skullgirls</gamedir>
+    </game>
+    <game name="StardewValley">
+        <parent>.config</parent>
+        <gamedir>StardewValley</gamedir>
+    </game>
+    <game name="SuperHexagon">
+        <parent>.local/share</parent>
+        <gamedir>SuperHexagon</gamedir>
+    </game>
+    <game name="SuperMeatBoy">
+        <parent>.local/share</parent>
+        <gamedir>SuperMeatBoy</gamedir>
+    </game>
+    <game name="TheEndIsNigh">
+        <parent>.local/share</parent>
+        <gamedir>The End is Nigh</gamedir>
     </game>
 </games>

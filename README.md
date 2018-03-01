@@ -18,60 +18,49 @@ A little script which syncs (uploads and downloads) savegames for common linux g
 * Quake3
 * ShovelKnight
 * Skullgirls
+* StardewValley
 * SuperHexagon
 * SuperMeatBoy
-* TheEndIsNigh
 * Teeworlds
+* TheEndIsNigh
 
 ## Configuration
-You need a configuration file in your home directory
-Generate one with the setup wizard:
+Before you can use the script, you need a configuration file
+in your home directory. Generate one with the setup wizard:
 ```bash
-savegame_sync.sh -s
+savegame_sync.sh -s [--setup]
 ```
-
-Or alternatively create your own
-```bash
-user$ mkdir .savegame_sync
-user$ vim .savegame_sync/config.cfg
-```
-with the following content
-```bash
-CLOUD_DOMAIN="your.domain.name" # the domain name of your nextcloud/owncloud
-CLOUD_URL_PATH="somesubdiretory" # if you installed your owncloud on some subdirectory of your webroot you can add the path here. Can be empty
-CLOUD_USER=$YOUR_USERNAME # your Cloud username
-CLOUD_PASSWORD="$YOUR_PASSWORD" your Cloud password. If not set, password from standard input
-CLOUD_SYNC_DIR="$YOUR_WEBDAV_DIRECTORY" # directory in your owncloud webdav root. Standard configuration is "savegames"
-```
-If you don't want to use the configuration file, you can start the script wit set variables:
-```bash
-CLOUD_DOMAIN="your.domain.com" CLOUD_USER=tux savegame_sync.sh -u "$Game1, $Game2"
-```
-
 
 ## Usage
 Upload the files to your Cloud:
 ```bash
-savegame_sync.sh -u "$Game1, $Game2"
+savegame_sync.sh -u [--upload] --games "$Game1, $Game2"
 ```
 
 Download the files from your Cloud
 to the correct location:
 ```bash
-savegame_sync.sh -d "$Game1, $Game2"
+savegame_sync.sh -d [--download] --games "$Game1, $Game2"
 ```
 
 List all available games:
 ```bash
-savegame_sync.sh -l
+savegame_sync.sh -l [--list]
 ```
 
 Wizard for the configuration file:
 ```bash
-savegame_sync.sh -s
+savegame_sync.sh -s [--setup]
 ```
 
 Show the help message:
 ```bash
-savegame_sync.sh -h
+savegame_sync.sh -h [--help]
 ```
+
+## ToDos
+* save password hashed
+* get password from stdin
+* add functionality to up/download all with "all" string.
+* Check several pathes for games.xml (/usr/share, /usr/local/share, $HOME/.local/share ./)
+* prevent running the script as root
