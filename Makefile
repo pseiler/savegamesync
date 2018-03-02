@@ -1,7 +1,7 @@
 VERSION = 3.02
 PREFIX=/usr/local
 DESTDIR=
-NAME=savegame_sync
+NAME=savegamesync
 bindir=$(PREFIX)/bin
 sharedir=$(PREFIX)/share
 games=games.xml

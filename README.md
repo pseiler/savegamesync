@@ -1,23 +1,26 @@
-# savegame\_sync
+# savegamesync
 ## Save Game Syncer with Owncloud/Nextcloud for Linux
 A little script which syncs (uploads and downloads) savegames for common linux games.
+The purpose is to have your savegames (and for some games the configuration) on every device in sync.
+The only requirement is, to have an access to an OwnCloud/Nextcloud. It reads the savestate location from
+a shipped *games.xml* for every supported game and puts an archive to a configurable location on your Cloud.
 
 ## Installation
 Make sure you installed **tar**, **gzip**, **pycURL**, **make** and **python 2.7**.
-To install savegame\_sync.py:
+To install savegamesync:
 1. Download the tarball
 2. Extract it
 3. type ``sudo make install``
-4. Run savegame\_sync with all necessary parameters on the command line
+4. Run savegamesync with all necessary parameters on the command line
 5. Enjoy
 
-To uninstall savegame\_sync just run ``sudo make uninstall`` from the installation directory.
+To uninstall savegamesync just run ``sudo make uninstall`` from the installation directory.
 
 ## Configuration
 Before you can use the script, you need a configuration file
 in your home directory. Generate one with the setup wizard:
 ```bash
-savegame_sync.sh -s [--setup]
+savegamesync -s [--setup]
 ```
 
 ## Usage
@@ -25,33 +28,33 @@ savegame_sync.sh -s [--setup]
 
 Upload the files to your Cloud. If you want to upload all available games, use "all":
 ```bash
-savegame_sync.sh -u [--upload] --games "$Game1, $Game2"
+savegamesync -u [--upload] --games "$Game1, $Game2"
 ```
 
 Download the files from your Cloud to the correct location. If you want to download all
  available games, use "all"
 ```bash
-savegame_sync.sh -d [--download] --games "$Game1, $Game2"
+savegamesync -d [--download] --games "$Game1, $Game2"
 ```
 
 List all available games:
 ```bash
-savegame_sync.sh -l [--list]
+savegamesync -l [--list]
 ```
 
 Wizard for the configuration file:
 ```bash
-savegame_sync.sh -s [--setup]
+savegamesync -s [--setup]
 ```
 
 Show the help message:
 ```bash
-savegame_sync.sh -h [--help]
+savegamesync -h [--help]
 ```
 
 Show the program version:
 ```bash
-savegame_sync.sh -v [--version]
+savegamesync -v [--version]
 ```
 ## Howto add games
 If you miss a game, which is not listed here, just fork the project, add the missing game to the *games.xml* and send an submit request. If you don't know where the savestate of your game is located, check-out [PCGamingWiki](https://pcgamingwiki.com/wiki/Home). Linux savegame location is most probably listed there.

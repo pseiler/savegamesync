@@ -123,7 +123,7 @@ games_enabled = False
 
 # setting the home variable
 my_home = os.environ['HOME']
-config_path = "%s/.savegame_sync.conf" % my_home
+config_path = "%s/.savegamesync.conf" % my_home
 
 # check if the games.xml is in any of the following pathes
 ## read bash environment variable
