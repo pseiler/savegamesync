@@ -42,6 +42,8 @@ Show the program version:
 ```bash
 savegame_sync.sh -v [--version]
 ```
+## Howto add games
+If you miss a game, which is not listed here, just fork the project, add the missing game to the *games.xml* and send an submit request. If you don't know where the savestate of your game is located, check-out [PCGamingWiki](https://pcgamingwiki.com/wiki/Home). Linux savegame location is most probably listed there.
 
 ## Currently supported Games
 * AmnesiaADarkDescent
