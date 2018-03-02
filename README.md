@@ -2,29 +2,6 @@
 ## Save Game Syncer with Owncloud/Nextcloud for Linux
 A little script which syncs (uploads and downloads) savegames for common linux games.
 
-## Currently supported Games
-* AmnesiaADarkDescent
-* Celeste
-* Deponia1
-* Deponia2
-* Deponia3
-* Guacamelee
-* Hacknet
-* Hedgewars
-* HollowKnight
-* HunieCamStudio
-* HuniePop
-* OlliOlli
-* OlliOlli2
-* Quake3
-* ShovelKnight
-* Skullgirls
-* StardewValley
-* SuperHexagon
-* SuperMeatBoy
-* Teeworlds
-* TheEndIsNigh
-
 ## Configuration
 Before you can use the script, you need a configuration file
 in your home directory. Generate one with the setup wizard:
@@ -65,6 +42,58 @@ Show the program version:
 ```bash
 savegame_sync.sh -v [--version]
 ```
+
+## Currently supported Games
+* AmnesiaADarkDescent
+* BioshockInfinite
+* BitTripRunner
+* Celeste
+* Deponia1
+* Deponia2
+* Deponia3
+* Doom3
+* DungeonDefenders
+* DustAnElysianTail
+* EnemyTerritoryQuakeWars
+* Gish
+* Guacamelee
+* Hacknet
+* Hedgewars
+* HollowKnight
+* HotlineMiami
+* HotlineMiami2
+* HunieCamStudio
+* HuniePop
+* Jamestown
+* KatawaShoujo
+* Limbo
+* MarkOfTheNinja
+* NaturalSelection2
+* OlliOlli
+* OlliOlli2
+* OpenArena
+* Postal2
+* Psychonauts
+* Quake3
+* Quake4
+* Rochard
+* Rust
+* Shank1
+* Shank2
+* ShovelKnight
+* Skullgirls
+* StardewValley
+* SuperHexagon
+* SuperMeatBoy
+* SurgeonSimulator2013
+* SwordsAndSoldiers
+* Teeworlds
+* TheBindingOfIsaacRebirth
+* TheEndIsNigh
+* Torchlight1
+* Torchlight2
+* UT2004
+* Vessel
 
 ## ToDos
 * save password hashed
