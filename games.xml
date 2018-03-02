@@ -29,7 +29,7 @@
     </game>
     <game name="Deponia3">
         <parent>.local/share/Daedalic Entertainment</parent>
-        <gamedir>Deponia 2</gamedir>
+        <gamedir>Deponia 3</gamedir>
     </game>
     <game name="Doom3">
         <parent></parent>
