@@ -9,6 +9,7 @@ from tempfile import mkdtemp
 from shutil import rmtree
 import pycurl
 import getpass
+import base64
 try:
         from io import BytesIO
 except ImportError:
@@ -85,14 +86,18 @@ def setup_config(path_to_config):
     config_user = raw_input("User for your Cloud: ")
     pw_check = False
     while not pw_check:
-        config_password = getpass.getpass("Password for your Cloud: ")
-        config_password_check = getpass.getpass("Repeat password: ")
-        if (config_password == config_password_check):
+        config_password = getpass.getpass("Password for your Cloud (can be empty): ")
+        if not config_password:
             pw_check = True
         else:
-            print "Passwords didn't match. Try again"
+            config_password_check = getpass.getpass("Repeat password: ")
+            if (config_password == config_password_check):
+                pw_check = True
+            else:
+                print "Passwords didn't match. Try again"
     config_sync_dir = raw_input("Sync directory for your Cloud [savegames] (can be empty): ")
     config_url_path = raw_input("Webserver Document Root [/owncloud] (can be empty): ")
+    config_password = base64.b64encode(config_password)
     config_setup = ConfigParser.ConfigParser()
     with open(path_to_config, 'wb') as f:
         config_setup.add_section('main')
@@ -235,7 +240,6 @@ if not myconfig.has_section('main'):
 # check if config option is set. If not print an error and exit
 config_has_option(myconfig, 'main', 'domain', config_path)
 config_has_option(myconfig, 'main', 'user', config_path)
-config_has_option(myconfig, 'main', 'password', config_path)
 
 # check optional parameters and set default if not present
 if myconfig.has_option('main', 'url_path'):
@@ -247,10 +251,17 @@ if myconfig.has_option('main', 'sync_dir'):
     my_sync_dir = myconfig.get('main', 'sync_dir')
 else:
     my_sync_dir = "savegames"
-# set variables from config parameters
+
+# check if password is set. If not, read it from stdin
+if myconfig.has_option('main', 'password'):
+    my_password = base64.b64decode(myconfig.get('main', 'password'))
+else:
+    # get password from stdin
+    my_password = getpass.getpass("Password for your Cloud: ")
+
+# set domain and user from config parameters
 my_domain = myconfig.get('main', 'domain')
 my_user = myconfig.get('main', 'user')
-my_password = myconfig.get('main', 'password')
 
 # build standard url from parameters
 my_webdav = "https://%s/%s/remote.php/dav/files/%s" % (my_domain, my_url_path, my_user)
