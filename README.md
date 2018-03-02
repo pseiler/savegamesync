@@ -10,6 +10,7 @@ To install savegame\_sync.py:
 3. type ``sudo make install``
 4. Run savegame\_sync with all necessary parameters on the command line
 5. Enjoy
+
 To uninstall savegame\_sync just run ``sudo make uninstall`` from the installation directory.
 
 ## Configuration
