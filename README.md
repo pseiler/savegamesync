@@ -2,6 +2,16 @@
 ## Save Game Syncer with Owncloud/Nextcloud for Linux
 A little script which syncs (uploads and downloads) savegames for common linux games.
 
+## Installation
+Make sure you installed **tar**, **gzip**, **pycURL**, **make** and **python 2.7**.
+To install savegame\_sync.py:
+1. Download the tarball
+2. Extract it
+3. type ``sudo make install``
+4. Run savegame\_sync with all necessary parameters on the command line
+5. Enjoy
+To uninstall savegame\_sync just run ``sudo make uninstall`` from the installation directory.
+
 ## Configuration
 Before you can use the script, you need a configuration file
 in your home directory. Generate one with the setup wizard:
