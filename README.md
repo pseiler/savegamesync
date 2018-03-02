@@ -60,10 +60,35 @@ savegamesync -v [--version]
 If you miss a game, which is not listed here, just fork the project, add the missing game to the *games.xml* and send an submit request. If you don't know where the savestate of your game is located, check-out [PCGamingWiki](https://pcgamingwiki.com/wiki/Home). Linux savegame location is most probably listed there.
 
 ## Currently supported Games
+* 140
+* AVirusNamedTom
 * AmnesiaADarkDescent
+* AmnesiaAMachineForPigs
+* AnomalyKorea
+* Antichamber
+* Aquaria
+* Avadon1
+* Bastion
+* BeatBuddyTaleOfTheGuardians
+* BeatHazard
+* BeatHazardUltra
 * BioshockInfinite
+* BitTripPresentsRunner2
 * BitTripRunner
+* Botanicula
+* Braid
+* BreachAndClear
+* BrokenAge
+* BrokenSword1DirectoresCut
+* BrokenSword2
+* BrokenSword5
+* BrütalLegend
+* Capsized
+* CaveStory+
 * Celeste
+* Closure
+* Cogs
+* ContraptionMaker
 * Deponia1
 * Deponia2
 * Deponia3
@@ -104,10 +129,16 @@ If you miss a game, which is not listed here, just fork the project, add the mis
 * SurgeonSimulator2013
 * SwordsAndSoldiers
 * Teeworlds
+* TheBardsTale
 * TheBindingOfIsaacRebirth
+* TheBridge
 * TheEndIsNigh
 * Torchlight1
 * Torchlight2
+* Trine1
+* Trine2
+* Trine3
+* TrineEnchantedEdition
 * UT2004
 * Vessel
 

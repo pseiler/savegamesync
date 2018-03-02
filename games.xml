@@ -1,11 +1,51 @@
 <games>
-    <game name="Teeworlds">
-        <parent></parent>
-        <gamedir>.teeworlds</gamedir>
+    <game name="140">
+        <parent>.config/unity3d/JeppeCarlsen</parent>
+        <gamedir>140</gamedir>
     </game>
     <game name="AmnesiaADarkDescent">
         <parent>.frictionalgames</parent>
         <gamedir>Amnesia</gamedir>
+    </game>
+    <game name="AmnesiaAMachineForPigs">
+        <parent>.frictionalgames/Amnesia</parent>
+        <gamedir>Pig</gamedir>
+    </game>
+    <game name="AnomalyKorea">
+        <parent></parent>
+        <gamedir>.Anomaly Korea</gamedir>
+    </game>
+    <game name="Antichamber">
+        <parent>.local/share/AlexanderBruce</parent>
+        <gamedir>Antichamber</gamedir>
+    </game>
+    <game name="Aquaria">
+        <parent>.local/share</parent>
+        <gamedir>Aquaria</gamedir>
+    </game>
+    <game name="Avadon1">
+        <parent>.local/share</parent>
+        <gamedir>Avadon</gamedir>
+    </game>
+    <game name="AVirusNamedTom">
+        <parent>.local/share</parent>
+        <gamedir>CircuitGameData</gamedir>
+    </game>
+    <game name="Bastion">
+        <parent>.local/share</parent>
+        <gamedir>Bastion</gamedir>
+    </game>
+    <game name="BeatHazard">
+        <parent>.local/share</parent>
+        <gamedir>BeatHazard_Linux2</gamedir>
+    </game>
+    <game name="BeatHazardUltra">
+        <parent>.local/share</parent>
+        <gamedir>BeatHazard_Linux2</gamedir>
+    </game>
+    <game name="BeatBuddyTaleOfTheGuardians">
+        <parent>.config/unity3d/Threaks</parent>
+        <gamedir>BeatBuddy</gamedir>
     </game>
     <game name="BioshockInfinite">
         <parent>.local/share/irrationalgames</parent>
@@ -15,9 +55,65 @@
         <parent>.gajin_games</parent>
         <gamedir>bit.trip.runner</gamedir>
     </game>
+    <game name="BitTripPresentsRunner2">
+        <parent>.config/gajin_games</parent>
+        <gamedir>runner2</gamedir>
+    </game>
+    <game name="Botanicula">
+        <parent>Documents</parent>
+        <gamedir>BotaniculaSaves</gamedir>
+    </game>
+    <game name="Braid">
+        <parent></parent>
+        <gamedir>.Braid</gamedir>
+    </game>
+    <game name="BreachAndClear">
+        <parent>Documents/SavedGames</parent>
+        <gamedir>BreachClear</gamedir>
+    </game>
+    <game name="BrokenAge">
+        <parent>.local/share/doublefine</parent>
+        <gamedir>BrokenAge</gamedir>
+    </game>
+    <game name="BrokenSword1DirectoresCut">
+        <parent></parent>
+        <gamedir>.bs1dc</gamedir>
+    </game>
+    <game name="BrokenSword2">
+        <parent></parent>
+        <gamedir>.bs2</gamedir>
+    </game>
+    <game name="BrokenSword5">
+        <parent></parent>
+        <gamedir>.bs5</gamedir>
+    </game>
+    <game name="BrütalLegend">
+        <parent>.local/share/doublefine</parent>
+        <gamedir>brutallegend</gamedir>
+    </game>
+    <game name="Capsized">
+        <parent>.local/share</parent>
+        <gamedir>Capsized</gamedir>
+    </game>
+    <game name="CaveStory+">
+        <parent>.local/share</parent>
+        <gamedir>CaveStory+</gamedir>
+    </game>
     <game name="Celeste">
         <parent>.local/share</parent>
         <gamedir>Celeste</gamedir>
+    </game>
+    <game name="Closure">
+        <parent>.local/share/Eyebrow Interactive</parent>
+        <gamedir>Closure</gamedir>
+    </game>
+    <game name="Cogs">
+        <parent>.local/share</parent>
+        <gamedir>Cogs</gamedir>
+    </game>
+    <game name="ContraptionMaker">
+        <parent>.config/spotkincm</parent>
+        <gamedir>contraptionmaker</gamedir>
     </game>
     <game name="Deponia1">
         <parent>.local/share/Daedalic Entertainment</parent>
@@ -175,9 +271,21 @@
         <parent>.ronimo-games</parent>
         <gamedir>swords_and_soldiers</gamedir>
     </game>
+    <game name="TheBardsTale">
+        <parent>.local/share</parent>
+        <gamedir>BardTale</gamedir>
+    </game>
     <game name="TheBindingOfIsaacRebirth">
         <parent>.local/share</parent>
         <gamedir>binding of isaac rebirth</gamedir>
+    </game>
+    <game name="TheBridge">
+        <parent>.config/unity3d/The Quantum Astrophysicists Guild</parent>
+        <gamedir>The Bridge</gamedir>
+    </game>
+    <game name="Teeworlds">
+        <parent></parent>
+        <gamedir>.teeworlds</gamedir>
     </game>
     <game name="TheEndIsNigh">
         <parent>.local/share</parent>
@@ -190,6 +298,22 @@
     <game name="Torchlight2">
         <parent>.local/share/Runic Games</parent>
         <gamedir>Torchlight 2</gamedir>
+    </game>
+    <game name="Trine1">
+        <parent>.frozenbyte</parent>
+        <gamedir>trine</gamedir>
+    </game>
+    <game name="Trine2">
+        <parent>.frozenbyte</parent>
+        <gamedir>Trine2</gamedir>
+    </game>
+    <game name="Trine3">
+        <parent>.frozenbyte</parent>
+        <gamedir>Trine3</gamedir>
+    </game>
+    <game name="TrineEnchantedEdition">
+        <parent>.frozenbyte</parent>
+        <gamedir>Trine1</gamedir>
     </game>
     <game name="UT2004">
         <parent></parent>
