@@ -33,12 +33,14 @@ savegame_sync.sh -s [--setup]
 ```
 
 ## Usage
-Upload the files to your Cloud:
+**Caution**: Every Game must be comma seperated white a trailing whitespace after a comma.
+
+Upload the files to your Cloud. If you want to upload all available games, use "all":
 ```bash
 savegame_sync.sh -u [--upload] --games "$Game1, $Game2"
 ```
 
-Download the files from your Cloud
+Download the files from your Cloud. If you want to download all available games, use "all"
 to the correct location:
 ```bash
 savegame_sync.sh -d [--download] --games "$Game1, $Game2"
@@ -67,5 +69,4 @@ savegame_sync.sh -v [--version]
 ## ToDos
 * save password hashed
 * get password from stdin
-* add functionality to up/download all with "all" string.
 * use python setup.py instad of Makefile

@@ -29,18 +29,14 @@ if os.getuid() == 0:
 def usage():
     print "Usage:"
     print "%s -u [--upload] --games \"$Game1, $Game2\"   uploads the files to your Cloud" % script_name
-    print
     print "%s -d [--download] --games \"$Game1, $Game2\" downloads the files from your Cloud" % script_name
-    print "                                                          to the correct location" 
-    print
+    print "%s -u [--upload] --games \"all\"              uploads all available games. Also works for downloads" % script_name
     print "%s -l [--list]                              lists all available games" % script_name
-    print
     print "%s -s [--setup]                             Wizard for the configuration file" % script_name
-    print
     print "%s -h [--help]                              Shows this help message" % script_name
-    print
     print "%s -v [--version]                           Shows %s\'s version" % (script_name, script_name)
     print
+    print "Be careful when providing the game list. Seperate every Game with a comma and a whitespace"
 
 def curl_test(url, user, password):
     buffer = BytesIO()
@@ -206,16 +202,19 @@ except NameError:
     print ""
     usage()
     sys.exit(1)
-games_array = games.split(", ")
-mismatch = []
-for element in games_array:
-    if element not in avail_games:
-        mismatch.append(element) 
-if mismatch:
-    print "Following games not found:"
-    for i in mismatch:
-        print i
-    sys.exit(2)
+if games == "all":
+    games_array = avail_games
+else:
+    games_array = games.split(", ")
+    mismatch = []
+    for element in games_array:
+        if element not in avail_games:
+            mismatch.append(element)
+    if mismatch:
+        print "Following games not found:"
+        for i in mismatch:
+            print i
+        sys.exit(2)
 
 
 # check if configuration file exists on filesystem
