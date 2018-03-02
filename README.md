@@ -17,8 +17,8 @@ Upload the files to your Cloud. If you want to upload all available games, use "
 savegame_sync.sh -u [--upload] --games "$Game1, $Game2"
 ```
 
-Download the files from your Cloud. If you want to download all available games, use "all"
-to the correct location:
+Download the files from your Cloud to the correct location. If you want to download all
+ available games, use "all"
 ```bash
 savegame_sync.sh -d [--download] --games "$Game1, $Game2"
 ```
