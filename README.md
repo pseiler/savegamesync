@@ -99,3 +99,4 @@ savegame_sync.sh -v [--version]
 * save password hashed
 * get password from stdin
 * use python setup.py instad of Makefile
+* Add parameter to backup old cloudsave and rename it
