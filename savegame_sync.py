@@ -296,7 +296,7 @@ for element in games_array:
         # check if directory of game exists. Otherwhite print an error and exit
         if not os.path.exists(fulldir):
             print "Warning: Path \"%s\" doesn't exist." % fulldir
-            print "Do you have a local %s of \"%s\"" % (savegame, element)
+            print "Do you have a local %s of \"%s\"?" % (savegame, element)
             print
         else:
             # creating tar file
