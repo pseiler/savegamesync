@@ -146,3 +146,5 @@ If you miss a game, which is not listed here, just fork the project, add the mis
 * save password with a better hash than base64
 * use python setup.py instad of Makefile
 * Add parameter to backup old cloudsave and rename it
+* Add support to copy everything just to a local directory
+* consider to use yaml instead of xml
