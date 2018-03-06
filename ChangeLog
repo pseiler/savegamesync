@@ -1,0 +1,8 @@
+- 0.0.2
+* changed argument parsing to argparse class
+* add support to remain old backup of file
+* add support for a local backup
+* changed used parameters
+
+- 0.0.1
+initial creation
