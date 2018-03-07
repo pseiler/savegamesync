@@ -126,6 +126,7 @@ Here is an example of a xml snippet containing a game
 * DungeonDefenders
 * DustAnElysianTail
 * EnemyTerritoryQuakeWars
+* FEZ
 * Gish
 * Guacamelee
 * Hacknet
