@@ -143,6 +143,10 @@
         <parent></parent>
         <gamedir>.etqwcl</gamedir>
     </game>
+    <game name="FEZ">
+        <parent>.local/share</parent>
+        <gamedir>FEZ</gamedir>
+    </game>
     <game name="Gish">
         <parent></parent>
         <gamedir>.gish</gamedir>
