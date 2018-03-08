@@ -199,6 +199,10 @@
         <parent>.klei</parent>
         <gamedir>ninja</gamedir>
     </game>
+    <game name="Minecraft">
+        <parent></parent>
+        <gamedir>.minecraft</gamedir>
+    </game>
     <game name="NaturalSelection2">
         <parent>.config</parent>
         <gamedir>Natural Selection 2</gamedir>

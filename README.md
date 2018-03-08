@@ -140,6 +140,7 @@ Here is an example of a xml snippet containing a game
 * KatawaShoujo
 * Limbo
 * MarkOfTheNinja
+* Minecraft
 * NaturalSelection2
 * OlliOlli
 * OlliOlli2
