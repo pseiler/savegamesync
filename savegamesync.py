@@ -1,7 +1,10 @@
 #!/usr/bin/python
-#import getopt
-import argparse
 import sys
+# output piping is not working without utf-8 encoding
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+import argparse
 import os
 import xml.etree.ElementTree
 import ConfigParser
@@ -209,7 +212,7 @@ elif args.list:
         print games
     sys.exit(0)
 
-# check if all parameter for games is set. If not compare every listed game against supportet game list
+# check if "all" parameter for games is set. If not compare every listed game against supportet game list
 if args.games:
     if args.games[0] == "all":
         games_array = avail_games
@@ -273,6 +276,8 @@ if os.path.exists(config_path):
     if args.local:
         if myconfig.has_option('main', 'local_dir'):
             my_local_dir = myconfig.get('main', 'local_dir')
+
+# set the directory path if no configuration found to local sync your savegames
 else:
     my_local_dir = my_home + "/savegames"
 
@@ -287,6 +292,7 @@ elif args.backup and args.restore:
     parser.print_help()
     sys.exit(2)
 
+# check if an actual process of task should be done. (check if local file and/or cloud tasks should be done). Exit if none of them is set
 if not args.cloud and not args.local:
     print "Nothing to do. Use at least -c [--cloud] or -d [--local] parameter"
     print
