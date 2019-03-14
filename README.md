@@ -54,7 +54,7 @@ Copies the files from your local directory to the correct savestate location. If
 ```bash
 savegamesync --restore --local --games $Game1 $Game2
 ```
-If you want to preserve the old backup. It is supported by local and cloud backup Use:
+If you want to preserve the old backup use "-p". It is supported by local and cloud backup Use:
 ```bash
 savegamesync --backup --local --preserve --games $Game1 $Game2
 ```

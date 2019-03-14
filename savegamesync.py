@@ -22,7 +22,7 @@ except ImportError:
 
 # define base variables
 script_name = os.path.basename(__file__)
-savegame = "savestate"
+savegame = "savegame"
 version = "0.0.1"
 
 # check if script is running as root
